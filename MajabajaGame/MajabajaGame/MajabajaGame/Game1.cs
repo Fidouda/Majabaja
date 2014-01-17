@@ -15,82 +15,82 @@ namespace MajabajaGame
     /// <summary>
     /// Type principal pour votre jeu
     /// </summary>
+    /// <summary>
+    /// This is the main type for your game
+    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        KeyboardState currentKeyboardState, oldKeyboardState;
+        AbstractState currentState;
+
+        public SpriteBatch getSpriteBatch()
+        {
+            return spriteBatch;
+        }
+
+        public KeyboardState getCurrentKeyboardState()
+        {
+            return currentKeyboardState;
+        }
+
+        public void setGameState(AbstractState p_newState)
+        {
+            currentState = p_newState;
+        }
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            // La fréquence d’image est de 30 i/s pour le Windows Phone.
-            TargetElapsedTime = TimeSpan.FromTicks(333333);
-
-            // Augmenter la durée de la batterie sous verrouillage.
-            InactiveSleepTime = TimeSpan.FromSeconds(1);
         }
 
-        /// <summary>
-        /// Permet au jeu d’effectuer l’initialisation nécessaire pour l’exécution.
-        /// Il peut faire appel aux services et charger tout contenu
-        /// non graphique. Calling base.Initialize énumère les composants
-        /// et les initialise.
-        /// </summary>
+
         protected override void Initialize()
         {
-            // TODO: Ajouter votre logique d’initialisation ici
-
+            currentKeyboardState = new KeyboardState();
+            currentState = new MainMenuState(this);
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent est appelé une fois par partie. Emplacement de chargement
-        /// de tout votre contenu.
-        /// </summary>
+
         protected override void LoadContent()
         {
-            // Créer un SpriteBatch, qui peut être utilisé pour dessiner des textures.
+            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: utilisez this.Content pour charger votre contenu de jeu ici
         }
 
-        /// <summary>
-        /// UnloadContent est appelé une fois par partie. Emplacement de déchargement
-        /// de tout votre contenu.
-        /// </summary>
+
         protected override void UnloadContent()
         {
-            // TODO: Déchargez le contenu non ContentManager ici
+            // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Permet au jeu d’exécuter la logique de mise à jour du monde,
-        /// de vérifier les collisions, de gérer les entrées et de lire l’audio.
-        /// </summary>
-        /// <param name="gameTime">Fournit un aperçu des valeurs de temps.</param>
+
         protected override void Update(GameTime gameTime)
         {
-            // Permet au jeu de se fermer
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            oldKeyboardState = currentKeyboardState;
+            currentKeyboardState = Keyboard.GetState();
+
+            // Allows the game to exit
+            if (currentKeyboardState.IsKeyDown(Keys.Escape) && oldKeyboardState.IsKeyUp(Keys.Escape))
                 this.Exit();
 
-            // TODO: Ajoutez votre logique de mise à jour ici
+            currentState.Update(gameTime);
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// Appelé quand le jeu doit se dessiner.
-        /// </summary>
-        /// <param name="gameTime">Fournit un aperçu des valeurs de temps.</param>
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Ajoutez votre code de dessin ici
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            currentState.Draw(gameTime);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
