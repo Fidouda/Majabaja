@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MajabajaGame
 {
-    class Level1State : AbstractState
+    class Level1State : AbstractGameState
     {
         //private Square aSquare;
         //private Rectangle background;

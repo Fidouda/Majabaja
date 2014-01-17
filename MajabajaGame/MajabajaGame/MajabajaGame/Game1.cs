@@ -23,7 +23,7 @@ namespace MajabajaGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState currentKeyboardState, oldKeyboardState;
-        AbstractState currentState;
+        AbstractGameState currentState;
 
         public SpriteBatch getSpriteBatch()
         {
@@ -35,7 +35,7 @@ namespace MajabajaGame
             return currentKeyboardState;
         }
 
-        public void setGameState(AbstractState p_newState)
+        public void setGameState(AbstractGameState p_newState)
         {
             currentState = p_newState;
         }
