@@ -5,13 +5,13 @@ using System.Text;
 
 namespace MajabajaGame
 {
-    public abstract class AbstractState
+    public abstract class AbstractGameState
     {
         // Attributs
         protected Game1 m_game;
 
         // Méthodes
-        protected AbstractState(Game1 p_game)
+        protected AbstractGameState(Game1 p_game)
         {
             this.m_game = p_game;
         }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MajabajaGame
 {
-    class MainMenuState : AbstractState
+    class MainMenuState : AbstractGameState
     {
         //private Rectangle m_instructions;
         //private Song m_backgroundMusic;
