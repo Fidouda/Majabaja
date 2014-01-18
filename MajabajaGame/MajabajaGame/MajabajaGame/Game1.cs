@@ -23,7 +23,8 @@ namespace MajabajaGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         KeyboardState currentKeyboardState, oldKeyboardState;
-        AbstractState currentState;
+        AbstractGameState currentState;
+        Texture2D test;
 
         public SpriteBatch getSpriteBatch()
         {
@@ -35,7 +36,7 @@ namespace MajabajaGame
             return currentKeyboardState;
         }
 
-        public void setGameState(AbstractState p_newState)
+        public void setGameState(AbstractGameState p_newState)
         {
             currentState = p_newState;
         }
@@ -50,8 +51,16 @@ namespace MajabajaGame
 
         protected override void Initialize()
         {
+            TouchPanel.EnabledGestures =
+                GestureType.Hold |
+                GestureType.Tap |
+                GestureType.DoubleTap |
+                GestureType.FreeDrag |
+                GestureType.Flick |
+                GestureType.Pinch;
+
             currentKeyboardState = new KeyboardState();
-            currentState = new MainMenuState(this);
+            currentState = new Level1State(this);
             base.Initialize();
         }
 
@@ -60,6 +69,7 @@ namespace MajabajaGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            test = Content.Load<Texture2D>("PhoneGameThumb");
         }
 
 
@@ -94,5 +104,6 @@ namespace MajabajaGame
 
             base.Draw(gameTime);
         }
+
     }
 }

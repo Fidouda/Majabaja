@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,13 +6,13 @@ using System.Text;
 
 namespace MajabajaGame
 {
-    public abstract class AbstractState
+    public abstract class AbstractGameState
     {
         // Attributs
         protected Game1 m_game;
 
         // Méthodes
-        protected AbstractState(Game1 p_game)
+        protected AbstractGameState(Game1 p_game)
         {
             this.m_game = p_game;
         }
@@ -29,6 +30,11 @@ namespace MajabajaGame
         public virtual void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             // Draw code common to every state
+        }
+
+        public virtual void HandleInputTouch(Microsoft.Xna.Framework.GameTime gameTime)
+        { 
+            // Handle differents gestures
         }
     }
 }
