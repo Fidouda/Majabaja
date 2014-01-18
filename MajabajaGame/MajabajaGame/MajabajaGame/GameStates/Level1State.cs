@@ -16,10 +16,15 @@ namespace MajabajaGame
         //private Square aSquare;
         //private Rectangle background;
         //private Song m_level1Music;
-        SpriteBatch spriteBatch;
+
+        private LifeBar m_lifeBar;
+        Texture2D m_liveHeart;
+        Texture2D m_deadHeart;
+
+        SpriteBatch m_spriteBatch;
         TileMap level1;
         int squaresAcross = 8;
-        int squaresDown = 5;
+        int squaresDown = 4;
 
 
         public Level1State(Game1 p_game)
@@ -61,10 +66,16 @@ namespace MajabajaGame
                 }
             }
 
-            spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
+            m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
+
+            m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
+            m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
+
+            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
+
             Tile.TileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
 
-            Camera.Location.Y = ((level1.MapHeight) * 128) - 1000;
+            Camera.Location.Y = ((level1.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -72,7 +83,7 @@ namespace MajabajaGame
             //aSquare.Draw(gameTime);
             //background.Draw(gameTime);
 
-            spriteBatch.Begin();
+            m_spriteBatch.Begin();
 
             Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
             int firstX = (int)firstSquare.X;
@@ -86,7 +97,7 @@ namespace MajabajaGame
             {
                 for (int x = 0; x < squaresAcross; x++)
                 {
-                    spriteBatch.Draw(
+                    m_spriteBatch.Draw(
                         Tile.TileSetTexture,
                         new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
                         Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
@@ -94,7 +105,11 @@ namespace MajabajaGame
                 }
             }
 
-            spriteBatch.End();
+            m_spriteBatch.End();
+
+            m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            m_lifeBar.Draw();
+            m_spriteBatch.End();
 
             base.Draw(gameTime);
         }
