@@ -41,7 +41,7 @@ namespace MajabajaGame
             //aSquare.LoadContent();
             //m_level1Music = m_game.Content.Load<Song>("drumBeat");
             //MediaPlayer.Play(m_level1Music);
-            using (var stream = TitleContainer.OpenStream("levelTest.txt"))
+            using (var stream = TitleContainer.OpenStream("level1.txt"))
             {
                 using (var reader = new StreamReader(stream))
                 {
