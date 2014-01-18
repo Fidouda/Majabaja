@@ -40,13 +40,14 @@ namespace MajabajaGame
 
         public override void LoadContent()
         {
+            // New spriteBatch
             spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
             // Loads the image than positions buttons and set there active field
             // Load
             m_background = m_game.Content.Load<Texture2D>("background");
-            m_playButton = m_game.Content.Load<Texture2D>("button");
-            m_quitButton = m_game.Content.Load<Texture2D>("button"); // change value here
+            m_playButton = m_game.Content.Load<Texture2D>("buttonPlay");
+            m_quitButton = m_game.Content.Load<Texture2D>("buttonQuit"); // change value here
 
             // Positions
             m_backgroundPosition = new Vector2(0,0);
@@ -87,8 +88,8 @@ namespace MajabajaGame
             {
                 if (m_playButtonField.Contains(new Point(m_mouse.X, m_mouse.Y)))
                 {
-                    m_game.setGameState(new Level1State(m_game));
-                      MediaPlayer.Stop();
+                    m_game.setGameState(new Level2State(m_game));
+                    MediaPlayer.Stop();
                 }
 
                 if (m_quitButtonField.Contains(new Point(m_mouse.X, m_mouse.Y)))
