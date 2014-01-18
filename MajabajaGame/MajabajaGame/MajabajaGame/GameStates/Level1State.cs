@@ -110,8 +110,8 @@ namespace MajabajaGame
                 // LifeBar
                 m_lifeBar.Draw();
                 // Character
-                m_spriteBatch.Draw(CharacterTile.TileSetTexture, new Rectangle(5*32,12*32,64,64),
-                    CharacterTile.GetSourceRectangle(Character.runningLoop(gameTime)), Color.White);
+                m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
+                    CharacterTile.GetSourceRectangle(Character.crouchingLoop(gameTime)), Color.White);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
