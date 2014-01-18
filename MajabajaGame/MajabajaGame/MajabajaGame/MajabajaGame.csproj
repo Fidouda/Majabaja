@@ -65,6 +65,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameObjects\Button.cs" />
     <Compile Include="GameStates\AbstractGameState.cs" />
     <Compile Include="GameStates\Level1State.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
