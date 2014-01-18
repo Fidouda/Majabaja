@@ -69,7 +69,7 @@ namespace MajabajaGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            test = Content.Load<Texture2D>("PhoneGameThumb");
+            test = Content.Load<Texture2D>("phoneGameThumb");
         }
 
 
