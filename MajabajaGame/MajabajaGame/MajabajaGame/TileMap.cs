@@ -13,21 +13,24 @@ namespace MajabajaGame
     class TileMap
     {
         public List<MapRow> Rows = new List<MapRow>();
-        public int MapWidth = 50;
-        public int MapHeight = 50;
+        public int MapWidth;
+        public int MapHeight;
 
-        public TileMap()
+        public TileMap(int length, int height)
         {
-            for (int y = 0; y < MapHeight; y++)
+            MapWidth = length;
+            MapHeight = height;
+
+            for (int y = 0; y < height; y++)
             {
                 MapRow thisRow = new MapRow();
-                for (int x = 0; x < MapWidth; x++)
+                for (int x = 0; x < length; x++)
                 {
                     thisRow.Columns.Add(new MapCell(0));
                 }
                 Rows.Add(thisRow);
             }
-
+            /*
             // Create Sample Map Data
             Rows[0].Columns[3].TileID = 3;
             Rows[0].Columns[4].TileID = 3;
@@ -70,6 +73,7 @@ namespace MajabajaGame
             Rows[5].Columns[7].TileID = 2;
 
             // End Create Sample Map Data
+            */
         }
     }
 }
