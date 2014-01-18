@@ -24,5 +24,21 @@ namespace MajabajaGame
         }
     }
 
+    static class DecorationTile
+    {
+        static public Texture2D DecorationTileSetTexture;
+        static public int TileWidth = 64;
+        static public int TileHeight = 64;
+
+        static public Vector2 originPoint = new Vector2(19, 39); //WHY??
+
+        static public Rectangle GetSourceRectangle(int tileIndex)
+        {
+            int tileY = tileIndex / (DecorationTileSetTexture.Width / TileWidth);
+            int tileX = tileIndex % (DecorationTileSetTexture.Width / TileWidth);
+
+            return new Rectangle(tileX * TileWidth, tileY * TileHeight, TileWidth, TileHeight);
+        }
+    }
 
 }

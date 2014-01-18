@@ -23,8 +23,11 @@ namespace MajabajaGame
 
         SpriteBatch m_spriteBatch;
         TileMap level1Background;
+        TileMap level1Decoration;
         int squaresAcross = 8;
         int squaresDown = 4;
+        int DecoAcross = 16;
+        int DecoDown = 8;
 
 
         public Level1State(Game1 p_game)
@@ -66,6 +69,31 @@ namespace MajabajaGame
                 }
             }
 
+            using (var stream = TitleContainer.OpenStream("level1decoration.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level1Decoration = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level1Decoration.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
+                }
+            }
+
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
@@ -74,6 +102,7 @@ namespace MajabajaGame
             m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
 
             BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
 
             Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
         }
@@ -83,8 +112,8 @@ namespace MajabajaGame
             //aSquare.Draw(gameTime);
             //background.Draw(gameTime);
 
+            //Background Tiles
             m_spriteBatch.Begin();
-
             Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
             int firstX = (int)firstSquare.X;
             int firstY = (int)firstSquare.Y;
@@ -104,7 +133,42 @@ namespace MajabajaGame
                         Color.White);
                 }
             }
+            m_spriteBatch.End();
 
+            //Decoration Tiles
+            m_spriteBatch.Begin();
+            Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+            int firstX1 = (int)firstSquare1.X;
+            int firstY1 = (int)firstSquare1.Y;
+
+            Vector2 squareOffset1 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+            int offsetX1 = (int)squareOffset1.X;
+            int offsetY1 = (int)squareOffset1.Y;
+
+            int tempValue = 0;
+
+            for (int y = 0; y < DecoDown; y++)
+            {
+                for (int x = 0; x < DecoAcross; x++)
+                {
+
+                    if (level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                    {
+                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
+                    }
+                    else
+                    {
+                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
+                    }
+                    
+
+                    m_spriteBatch.Draw(
+                        DecorationTile.DecorationTileSetTexture,
+                        new Rectangle((x * 64) - offsetX1, (y * 64) - offsetY1, 64, 64),
+                        DecorationTile.GetSourceRectangle(tempValue),
+                        Color.White);
+                }
+            }
             m_spriteBatch.End();
 
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
