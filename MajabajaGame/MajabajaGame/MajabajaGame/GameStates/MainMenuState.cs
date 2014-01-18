@@ -16,41 +16,64 @@ namespace MajabajaGame
     class MainMenuState : AbstractGameState
     {
         SpriteBatch spriteBatch;
-        Vector2 spritePosition1;
-        Texture2D texture1;
-        int sprite1Height;
-        int sprite1Width;
-        //private Song m_backgroundMusic;
+        Vector2 m_backgroundPosition;
+        Vector2 m_buttonPlayPosition;
+        Vector2 m_buttonQuitPosition;
+        Texture2D m_background;
+        Texture2D m_playButton;
+        Texture2D m_quitButton;
+
+        Rectangle m_playButtonField;
+        Rectangle m_quitButtonField;
+
+        MouseState m_mouse;
+        
+        private Song m_backgroundMusic;
+
 
         public MainMenuState(Game1 p_game)
             : base(p_game)
         {
-            //m_instructions = new Rectangle(p_game, "PhoneGameThumb");
             LoadContent();
         }
+
 
         public override void LoadContent()
         {
             spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
-            texture1 = m_game.Content.Load<Texture2D>("PhoneGameThumb");
+            // Loads the image than positions buttons and set there active field
+            // Load
+            m_background = m_game.Content.Load<Texture2D>("background");
+            m_playButton = m_game.Content.Load<Texture2D>("button");
+            m_quitButton = m_game.Content.Load<Texture2D>("button"); // change value here
 
-            spritePosition1.X = 0;
-            spritePosition1.Y = 0;
+            // Positions
+            m_backgroundPosition = new Vector2(0,0);
 
-            sprite1Height = texture1.Bounds.Height;
-            sprite1Width = texture1.Bounds.Width;
+            m_buttonPlayPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_playButton.Width / 2,
+                m_game.GraphicsDevice.Viewport.Height / 3 - m_playButton.Height / 2);
 
-            //m_instructions.setPosition(m_game.GraphicsDevice.Viewport.Width / 2 - m_instructions.getWidth() / 2,
-            //    m_game.GraphicsDevice.Viewport.Height / 2 - m_instructions.getHeight() / 2);
-            //m_backgroundMusic = m_game.Content.Load<Song>("accept");
-            //MediaPlayer.Play(m_backgroundMusic);
+            m_buttonQuitPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_playButton.Width / 2,
+                m_game.GraphicsDevice.Viewport.Height * 2 / 3 - m_playButton.Height / 2);
+            
+            // Fields
+            m_playButtonField = new Rectangle((int)m_buttonPlayPosition.X, (int)m_buttonPlayPosition.Y, (int)m_playButton.Width, (int)m_playButton.Height);
+            m_quitButtonField = new Rectangle((int)m_buttonQuitPosition.X, (int)m_buttonQuitPosition.Y, (int)m_quitButton.Width, (int)m_quitButton.Height);
+           
+            // Music load and starts
+            m_backgroundMusic = m_game.Content.Load<Song>("mainBackground");
+            MediaPlayer.Play(m_backgroundMusic);
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.Opaque);
-            spriteBatch.Draw(texture1, spritePosition1, Color.White);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            
+            spriteBatch.Draw(m_playButton, m_buttonPlayPosition, Color.White);
+            spriteBatch.Draw(m_quitButton, m_buttonQuitPosition, Color.White);
+            spriteBatch.Draw(m_background, m_backgroundPosition, Color.White);
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -58,97 +81,29 @@ namespace MajabajaGame
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
 
+            m_mouse = Mouse.GetState();
+
+            if (m_mouse.LeftButton == ButtonState.Released)
+            {
+                if (m_playButtonField.Contains(new Point(m_mouse.X, m_mouse.Y)))
+                {
+                    m_game.setGameState(new Level1State(m_game));
+                      MediaPlayer.Stop();
+                }
+
+                if (m_quitButtonField.Contains(new Point(m_mouse.X, m_mouse.Y)))
+                {
+                    m_game.Exit();
+                }
+            }
+
             this.HandleInputTouch(gameTime);
 
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.NumPad1))
-            {
-                m_game.setGameState(new Level1State(m_game));
-            }
             base.Update(gameTime);
         }
 
         public override void HandleInputTouch(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            TouchCollection touches = TouchPanel.GetState();
-
-            while (TouchPanel.IsGestureAvailable)
-            {
-                // read the next gesture from the queue
-                GestureSample gesture = TouchPanel.ReadGesture();
-
-                // we can use the type of gesture to determine our behavior
-                switch (gesture.GestureType)
-                {
-                    /*
-                    // on taps, we change the color of the selected sprite
-                    case GestureType.Tap:
-                    case GestureType.DoubleTap:
-                        if (selectedSprite != null)
-                        {
-                            selectedSprite.ChangeColor();
-                        }
-                        break;
-
-                    // on holds, if no sprite is selected, we add a new sprite at the
-                    // hold position and make it our selected sprite. otherwise we
-                    // remove our selected sprite.
-                    case GestureType.Hold:
-                        if (selectedSprite == null)
-                        {
-                            // create the new sprite
-                            selectedSprite = new Sprite(cat);
-                            selectedSprite.Center = gesture.Position;
-
-                            // add it to our list
-                            sprites.Add(selectedSprite);
-                        }
-                        else
-                        {
-                            sprites.Remove(selectedSprite);
-                            selectedSprite = null;
-                        }
-                        break;
-                    */
-                    // on drags, we just want to move the selected sprite with the drag
-                    case GestureType.FreeDrag:
-                        if (spriteBatch != null)
-                        {
-                            spritePosition1.X += gesture.Delta.X;
-                            spritePosition1.Y += gesture.Delta.Y;
-                        }
-                        break;
-                    /*
-                    // on flicks, we want to update the selected sprite's velocity with
-                    // the flick velocity, which is in pixels per second.
-                    case GestureType.Flick:
-                        if (selectedSprite != null)
-                        {
-                            selectedSprite.Velocity = gesture.Delta;
-                        }
-                        break;
-
-                    // on pinches, we want to scale the selected sprite
-                    case GestureType.Pinch:
-                        if (selectedSprite != null)
-                        {
-                            // get the current and previous locations of the two fingers
-                            Vector2 a = gesture.Position;
-                            Vector2 aOld = gesture.Position - gesture.Delta;
-                            Vector2 b = gesture.Position2;
-                            Vector2 bOld = gesture.Position2 - gesture.Delta2;
-
-                            // figure out the distance between the current and previous locations
-                            float d = Vector2.Distance(a, b);
-                            float dOld = Vector2.Distance(aOld, bOld);
-
-                            // calculate the difference between the two and use that to alter the scale
-                            float scaleChange = (d - dOld) * .01f;
-                            selectedSprite.Scale += scaleChange;
-                        }
-                        break;
-                     */
-                }
-            }
         }
     }
 }
