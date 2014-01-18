@@ -13,10 +13,10 @@ namespace MajabajaGame
 {
     class Level1State : AbstractGameState
     {
-        //private Square aSquare;
-        //private Rectangle background;
-        //private Song m_level1Music;
+        // Music
+        private Song m_level1Music;
 
+        //lifebar
         private LifeBar m_lifeBar;
         Texture2D m_liveHeart;
         Texture2D m_deadHeart;
@@ -33,17 +33,21 @@ namespace MajabajaGame
         public Level1State(Game1 p_game)
             : base(p_game)
         {
-            //aSquare = new Square(p_game, "square");
-            //background = new Rectangle(p_game, "b_daisy");
             LoadContent();
         }
 
         public override void LoadContent()
         {
-            //background.LoadContent();
-            //aSquare.LoadContent();
-            //m_level1Music = m_game.Content.Load<Song>("drumBeat");
-            //MediaPlayer.Play(m_level1Music);
+
+
+            // Load Music
+            m_level1Music = m_game.Content.Load<Song>("level1");
+            MediaPlayer.Play(m_level1Music);
+            
+            // Load Player
+            CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
+
+            // Load Tiles
             using (var stream = TitleContainer.OpenStream("level1.txt"))
             {
                 using (var reader = new StreamReader(stream))
@@ -109,10 +113,8 @@ namespace MajabajaGame
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            //aSquare.Draw(gameTime);
-            //background.Draw(gameTime);
-
             //Background Tiles
+
             m_spriteBatch.Begin();
             Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
             int firstX = (int)firstSquare.X;
@@ -135,6 +137,7 @@ namespace MajabajaGame
             }
             m_spriteBatch.End();
 
+			
             //Decoration Tiles
             m_spriteBatch.Begin();
             Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
@@ -172,7 +175,11 @@ namespace MajabajaGame
             m_spriteBatch.End();
 
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            m_lifeBar.Draw();
+                // LifeBar
+                m_lifeBar.Draw();
+                // Character
+                m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
+                    CharacterTile.GetSourceRectangle(Character.crouchingLoop(gameTime)), Color.White);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
@@ -192,27 +199,12 @@ namespace MajabajaGame
                 // change state to menu
                 m_game.setGameState(new MainMenuState(m_game));
             }
-
-            // Player Square control
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Left))
-            {
-                //aSquare.addX(-m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Right))
-            {
-                //aSquare.addX(m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Down))
-            {
-                //aSquare.addY(m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Up))
-            {
-                //aSquare.addY(-m_game.GraphicsDevice.Viewport.Width / 100);
-            }
+            // Loops song
+            //if(MediaPlayer.MediaStateChanged == )
+            //{
+            //    MediaPlayer.IsRepeating = true;
+            //    MediaPlayer.Play(m_level1Music);
+            //}
 
             base.Update(gameTime);
         }
