@@ -21,7 +21,7 @@ namespace MajabajaGame
         //private Song m_level2Music;
 
         SpriteBatch m_spriteBatch;
-        TileMap level1 = new TileMap();
+        //TileMap level1 = new TileMap();
         int squaresAcross = 26;
         int squaresDown = 16;
 
@@ -75,11 +75,13 @@ namespace MajabajaGame
             {
                 for (int x = 0; x < squaresAcross; x++)
                 {
+                    /*
                     m_spriteBatch.Draw(
                         Tile.TileSetTexture,
                         new Rectangle((x * 32) - offsetX, (y * 32) - offsetY, 32, 32),
                         Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
                         Color.White);
+                     * */
                 }
             }
 
@@ -97,7 +99,7 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 32);
+            //Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 32);
             base.Update(gameTime);
         }
 

@@ -4,34 +4,31 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace MajabajaGame
 {
-    class Level1State : AbstractGameState
+    class Level2State : AbstractGameState
     {
-        //private Square aSquare;
-        //private Rectangle background;
-        //private Song m_level1Music;
-
+        // Objects to appear
         private LifeBar m_lifeBar;
         Texture2D m_liveHeart;
         Texture2D m_deadHeart;
 
+        //private Rectangle background;
+        //private Song m_level2Music;
+
         SpriteBatch m_spriteBatch;
-        TileMap level1;
-        int squaresAcross = 8;
-        int squaresDown = 4;
+        TileMap level1 = new TileMap();
+        int squaresAcross = 26;
+        int squaresDown = 16;
 
 
-        public Level1State(Game1 p_game)
+        public Level2State(Game1 p_game)
             : base(p_game)
         {
-            //aSquare = new Square(p_game, "square");
-            //background = new Rectangle(p_game, "b_daisy");
             LoadContent();
         }
 
@@ -40,66 +37,47 @@ namespace MajabajaGame
             //background.LoadContent();
             //aSquare.LoadContent();
             //m_level1Music = m_game.Content.Load<Song>("drumBeat");
-            //MediaPlayer.Play(m_level1Music);
-            using (var stream = TitleContainer.OpenStream("levelTest.txt"))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    int length = Convert.ToInt16(reader.ReadLine());
-                    int height = Convert.ToInt16(reader.ReadLine());
+            //MediaPlayer.Play(m_levelwMusic);
 
-                    level1 = new TileMap(length, height);
-
-                    while (!reader.EndOfStream)
-                    {
-                        
-                        for (int i = 0; i < height; ++i)
-                        {
-                            string buffer = Convert.ToString((reader.ReadLine()));
-                            for (int j = 0; j < length; ++j)
-                            {
-                                level1.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
-                            }
-                        }
-
-                    }
-                }
-            }
-
+            // New SpriteBatch
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
+            // Loads the image than positions buttons and set there active field
+            // Load
+            Tile.TileSetTexture = m_game.Content.Load<Texture2D>("part1_tileset");
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
             m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
 
-            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
+            // Making objects
+            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch,
+                m_liveHeart, m_deadHeart);
+            
 
-            Tile.TileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            // Music load and starts
+            //m_level2Music = m_game.Content.Load<Song>("level2");
+            //MediaPlayer.Play(m_backgroundMusic);
 
-            Camera.Location.Y = ((level1.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            //aSquare.Draw(gameTime);
-            //background.Draw(gameTime);
-
-            m_spriteBatch.Begin();
-
-            Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
+            // Draw tiles
+            m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            Vector2 firstSquare = new Vector2(Camera.Location.X / 32, Camera.Location.Y / 32);
             int firstX = (int)firstSquare.X;
             int firstY = (int)firstSquare.Y;
-
-            Vector2 squareOffset = new Vector2(Camera.Location.X % 128, Camera.Location.Y % 128);
+            
+            Vector2 squareOffset = new Vector2(Camera.Location.X % 32, Camera.Location.Y % 32);
             int offsetX = (int)squareOffset.X;
             int offsetY = (int)squareOffset.Y;
-
+            
             for (int y = 0; y < squaresDown; y++)
             {
                 for (int x = 0; x < squaresAcross; x++)
                 {
                     m_spriteBatch.Draw(
                         Tile.TileSetTexture,
-                        new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
+                        new Rectangle((x * 32) - offsetX, (y * 32) - offsetY, 32, 32),
                         Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
                         Color.White);
                 }
@@ -107,6 +85,7 @@ namespace MajabajaGame
 
             m_spriteBatch.End();
 
+            // Draw objects
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
             m_lifeBar.Draw();
             m_spriteBatch.End();
@@ -118,38 +97,7 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 128);
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.M))
-            {
-                // stop the music
-                //MediaPlayer.Stop();
-
-                // change state to menu
-                m_game.setGameState(new MainMenuState(m_game));
-            }
-
-            // Player Square control
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Left))
-            {
-                //aSquare.addX(-m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Right))
-            {
-                //aSquare.addX(m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Down))
-            {
-                //aSquare.addY(m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.Up))
-            {
-                //aSquare.addY(-m_game.GraphicsDevice.Viewport.Width / 100);
-            }
-
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 32);
             base.Update(gameTime);
         }
 
