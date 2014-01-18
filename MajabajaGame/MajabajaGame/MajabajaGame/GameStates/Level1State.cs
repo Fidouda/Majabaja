@@ -18,8 +18,8 @@ namespace MajabajaGame
         //private Song m_level1Music;
         SpriteBatch spriteBatch;
         TileMap level1;
-        int squaresAcross = 26;
-        int squaresDown = 16;
+        int squaresAcross = 8;
+        int squaresDown = 5;
 
 
         public Level1State(Game1 p_game)
@@ -63,6 +63,8 @@ namespace MajabajaGame
 
             spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
             Tile.TileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+
+            Camera.Location.Y = ((level1.MapHeight) * 128) - 1000;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
