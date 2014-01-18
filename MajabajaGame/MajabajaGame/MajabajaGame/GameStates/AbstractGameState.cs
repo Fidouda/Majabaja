@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,11 @@ namespace MajabajaGame
         public virtual void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             // Draw code common to every state
+        }
+
+        public virtual void HandleInputTouch(Microsoft.Xna.Framework.GameTime gameTime)
+        { 
+            // Handle differents gestures
         }
     }
 }
