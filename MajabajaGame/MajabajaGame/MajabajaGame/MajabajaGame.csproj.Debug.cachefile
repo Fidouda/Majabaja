@@ -6,6 +6,9 @@ Content\buttonQuit.xnb
 Content\background.xnb
 Content\mainBackground.xnb
 Content\button.xnb
+Content\buttonResume.xnb
+Content\heart_empty.xnb
+Content\heart_full.xnb
 Content\mainBackground.wma
 level1.txt
 levelTest.txt

@@ -69,8 +69,10 @@
     <Compile Include="GameObjects\Button.cs" />
     <Compile Include="GameStates\AbstractGameState.cs" />
     <Compile Include="GameStates\Level1State.cs" />
+    <Compile Include="GameStates\Level2State.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\PauseState.cs" />
+    <Compile Include="LifeBar.cs" />
     <Compile Include="MapCell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
