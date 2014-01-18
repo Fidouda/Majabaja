@@ -7,15 +7,38 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MajabajaGame
 {
-    static class Tile
+    static class BackgroundTile
     {
-        static public Texture2D TileSetTexture;
+        static public Texture2D BackgroundTileSetTexture;
+        static public int TileWidth = 128;
+        static public int TileHeight = 128;
+
+        static public Vector2 originPoint = new Vector2(19, 39); //WHY??
 
         static public Rectangle GetSourceRectangle(int tileIndex)
         {
-            return new Rectangle(tileIndex * 128, 0, 128, 128);
+            int tileY = tileIndex / (BackgroundTileSetTexture.Width / TileWidth);
+            int tileX = tileIndex % (BackgroundTileSetTexture.Width / TileWidth);
+
+            return new Rectangle(tileX * TileWidth, tileY * TileHeight, TileWidth, TileHeight);
         }
-
-
     }
+
+    static class DecorationTile
+    {
+        static public Texture2D DecorationTileSetTexture;
+        static public int TileWidth = 64;
+        static public int TileHeight = 64;
+
+        static public Vector2 originPoint = new Vector2(19, 39); //WHY??
+
+        static public Rectangle GetSourceRectangle(int tileIndex)
+        {
+            int tileY = tileIndex / (DecorationTileSetTexture.Width / TileWidth);
+            int tileX = tileIndex % (DecorationTileSetTexture.Width / TileWidth);
+
+            return new Rectangle(tileX * TileWidth, tileY * TileHeight, TileWidth, TileHeight);
+        }
+    }
+
 }

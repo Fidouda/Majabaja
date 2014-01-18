@@ -89,6 +89,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DecorationTiles.png">
+      <Name>DecorationTiles</Name>
+	  <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+	</Compile>
     <Compile Include="character.png">
       <Name>character</Name>
       <Importer>TextureImporter</Importer>

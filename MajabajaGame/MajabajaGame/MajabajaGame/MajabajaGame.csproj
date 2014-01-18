@@ -74,7 +74,7 @@
     <Compile Include="GameStates\Level2State.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\PauseState.cs" />
-    <Compile Include="LifeBar.cs" />
+    <Compile Include="GameObjects\LifeBar.cs" />
     <Compile Include="MapCell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
@@ -91,6 +91,9 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="level1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="level1decoration.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="levelTest.txt">

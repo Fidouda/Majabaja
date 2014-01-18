@@ -22,9 +22,12 @@ namespace MajabajaGame
         Texture2D m_deadHeart;
 
         SpriteBatch m_spriteBatch;
-        TileMap level1;
+        TileMap level1Background;
+        TileMap level1Decoration;
         int squaresAcross = 8;
         int squaresDown = 4;
+        int DecoAcross = 16;
+        int DecoDown = 8;
 
 
         public Level1State(Game1 p_game)
@@ -52,21 +55,46 @@ namespace MajabajaGame
                     int length = Convert.ToInt16(reader.ReadLine());
                     int height = Convert.ToInt16(reader.ReadLine());
 
-                    level1 = new TileMap(length, height);
+                    level1Background = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
-                    {
-                        
+                    {          
                         for (int i = 0; i < height; ++i)
                         {
                             string buffer = Convert.ToString((reader.ReadLine()));
                             for (int j = 0; j < length; ++j)
                             {
-                                level1.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
+                                level1Background.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
                             }
                         }
 
                     }
+                    reader.Dispose();
+                }
+            }
+
+            using (var stream = TitleContainer.OpenStream("level1decoration.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level1Decoration = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level1Decoration.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
                 }
             }
 
@@ -77,15 +105,17 @@ namespace MajabajaGame
 
             m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
 
-            Tile.TileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
 
-            Camera.Location.Y = ((level1.MapHeight) * 128) - 480;
+            Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            m_spriteBatch.Begin();
+            //Background Tiles
 
+            m_spriteBatch.Begin();
             Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
             int firstX = (int)firstSquare.X;
             int firstY = (int)firstSquare.Y;
@@ -99,13 +129,49 @@ namespace MajabajaGame
                 for (int x = 0; x < squaresAcross; x++)
                 {
                     m_spriteBatch.Draw(
-                        Tile.TileSetTexture,
+                        BackgroundTile.BackgroundTileSetTexture,
                         new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
-                        Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
+                        BackgroundTile.GetSourceRectangle(level1Background.Rows[y + firstY].Columns[x + firstX].TileID),
                         Color.White);
                 }
             }
+            m_spriteBatch.End();
 
+			
+            //Decoration Tiles
+            m_spriteBatch.Begin();
+            Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+            int firstX1 = (int)firstSquare1.X;
+            int firstY1 = (int)firstSquare1.Y;
+
+            Vector2 squareOffset1 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+            int offsetX1 = (int)squareOffset1.X;
+            int offsetY1 = (int)squareOffset1.Y;
+
+            int tempValue = 0;
+
+            for (int y = 0; y < DecoDown; y++)
+            {
+                for (int x = 0; x < DecoAcross; x++)
+                {
+
+                    if (level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                    {
+                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
+                    }
+                    else
+                    {
+                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
+                    }
+                    
+
+                    m_spriteBatch.Draw(
+                        DecorationTile.DecorationTileSetTexture,
+                        new Rectangle((x * 64) - offsetX1, (y * 64) - offsetY1, 64, 64),
+                        DecorationTile.GetSourceRectangle(tempValue),
+                        Color.White);
+                }
+            }
             m_spriteBatch.End();
 
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -121,17 +187,24 @@ namespace MajabajaGame
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            this.HandleInputTouch(gameTime);
+
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1Background.MapWidth - squaresAcross) * 128);
+
+            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.M))
+            {
+                // stop the music
+                //MediaPlayer.Stop();
+
+                // change state to menu
+                m_game.setGameState(new MainMenuState(m_game));
+            }
             // Loops song
             //if(MediaPlayer.MediaStateChanged == )
             //{
             //    MediaPlayer.IsRepeating = true;
             //    MediaPlayer.Play(m_level1Music);
             //}
-
-
-            this.HandleInputTouch(gameTime);
-
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 128);
 
             base.Update(gameTime);
         }

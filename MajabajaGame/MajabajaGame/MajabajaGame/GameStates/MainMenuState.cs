@@ -64,6 +64,7 @@ namespace MajabajaGame
 
             // Music load and starts
             m_backgroundMusic = m_game.Content.Load<Song>("mainBackground");
+            MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(m_backgroundMusic);
         }
 
