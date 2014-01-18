@@ -51,8 +51,7 @@ namespace MajabajaGame
                     level1Background = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
-                    {
-                        
+                    {          
                         for (int i = 0; i < height; ++i)
                         {
                             string buffer = Convert.ToString((reader.ReadLine()));
@@ -63,7 +62,7 @@ namespace MajabajaGame
                         }
 
                     }
-
+                    reader.Dispose();
                 }
             }
 
