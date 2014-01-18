@@ -1,14 +1,12 @@
 Content\PhoneGameThumb.xnb
-Content\part1_tileset.xnb
 Content\TileSetBackground.xnb
-Content\background.xnb
 Content\buttonPlay.xnb
 Content\buttonQuit.xnb
-Content\button.xnb
+Content\background.xnb
+Content\mainBackground.xnb
 Content\buttonResume.xnb
 Content\heart_full.xnb
 Content\heart_empty.xnb
-Content\mainBackground.xnb
 Content\mainBackground.wma
 level1.txt
 levelTest.txt
