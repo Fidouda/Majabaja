@@ -22,7 +22,7 @@ namespace MajabajaGame
         Texture2D m_deadHeart;
 
         SpriteBatch m_spriteBatch;
-        TileMap level1;
+        TileMap level1Background;
         int squaresAcross = 8;
         int squaresDown = 4;
 
@@ -41,14 +41,14 @@ namespace MajabajaGame
             //aSquare.LoadContent();
             //m_level1Music = m_game.Content.Load<Song>("drumBeat");
             //MediaPlayer.Play(m_level1Music);
-            using (var stream = TitleContainer.OpenStream("levelTest.txt"))
+            using (var stream = TitleContainer.OpenStream("level1.txt"))
             {
                 using (var reader = new StreamReader(stream))
                 {
                     int length = Convert.ToInt16(reader.ReadLine());
                     int height = Convert.ToInt16(reader.ReadLine());
 
-                    level1 = new TileMap(length, height);
+                    level1Background = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
                     {
@@ -58,11 +58,12 @@ namespace MajabajaGame
                             string buffer = Convert.ToString((reader.ReadLine()));
                             for (int j = 0; j < length; ++j)
                             {
-                                level1.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
+                                level1Background.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
                             }
                         }
 
                     }
+
                 }
             }
 
@@ -73,9 +74,9 @@ namespace MajabajaGame
 
             m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
 
-            Tile.TileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
 
-            Camera.Location.Y = ((level1.MapHeight) * 128) - 480;
+            Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -98,9 +99,9 @@ namespace MajabajaGame
                 for (int x = 0; x < squaresAcross; x++)
                 {
                     m_spriteBatch.Draw(
-                        Tile.TileSetTexture,
+                        BackgroundTile.BackgroundTileSetTexture,
                         new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
-                        Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
+                        BackgroundTile.GetSourceRectangle(level1Background.Rows[y + firstY].Columns[x + firstX].TileID),
                         Color.White);
                 }
             }
@@ -118,7 +119,7 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 128);
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1Background.MapWidth - squaresAcross) * 128);
 
             if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.M))
             {

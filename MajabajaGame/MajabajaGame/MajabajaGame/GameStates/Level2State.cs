@@ -44,7 +44,7 @@ namespace MajabajaGame
 
             // Loads the image than positions buttons and set there active field
             // Load
-            Tile.TileSetTexture = m_game.Content.Load<Texture2D>("part1_tileset");
+            BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("part1_tileset");
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
             m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
 
