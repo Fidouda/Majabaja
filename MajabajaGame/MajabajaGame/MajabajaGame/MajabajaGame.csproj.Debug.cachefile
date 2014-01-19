@@ -20,6 +20,7 @@ Content\levelSelectBackground.xnb
 Content\deathScreen.xnb
 Content\blackObstacle.xnb
 Content\mainMenuBackground.xnb
+Content\ObstacleTiles.xnb
 Content\mainBackground.xnb
 Content\level1.xnb
 Content\deathMusic.xnb
@@ -32,4 +33,7 @@ Content\levelSelectScreen.wma
 level1.txt
 level1decoration.txt
 level1obstacle.txt
+level2.txt
+level2decoration.txt
+level2obstacle.txt
 levelTest.txt

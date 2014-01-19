@@ -39,6 +39,8 @@ namespace MajabajaGame
         int ObstAcross = 16;
         int ObstDown = 8;
 
+        float distanceCharacterImpact = 0;
+
         //Collision table
         int m_collisionAction = 0;
 
@@ -46,6 +48,11 @@ namespace MajabajaGame
             : base(p_game)
         {
             LoadContent();
+        }
+
+        public float getDistanceCharacterImpact()
+        {
+            return distanceCharacterImpact;
         }
 
         public override void LoadContent()
@@ -145,7 +152,7 @@ namespace MajabajaGame
 
             BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
             DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
-            ObstacleTile.ObstacleTileSetTexture = m_game.Content.Load<Texture2D>("blackObstacle");
+            ObstacleTile.ObstacleTileSetTexture = m_game.Content.Load<Texture2D>("ObstacleTiles");
 
             Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
         }
@@ -257,6 +264,7 @@ namespace MajabajaGame
                             if (tileTemp.Intersects(Character.getRectangle()))
                             {
                                 m_collisionAction = tempValue1;
+                                distanceCharacterImpact = Character.getPositionX() - tileTemp.X;
                             }
                         }
                     }
@@ -288,8 +296,8 @@ namespace MajabajaGame
                 MediaPlayer.Play(m_level1Music);
             }
 
-            if (m_lifeBar.isEmpty())
-                m_game.setGameState(new DeathState(m_game));
+            //if (m_lifeBar.isEmpty())
+               // m_game.setGameState(new DeathState(m_game));
                 
             switch (m_collisionAction)
             {

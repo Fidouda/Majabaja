@@ -36,6 +36,11 @@ namespace MajabajaGame
             return m_characterSize;
         }
 
+        public static float getPositionX()
+        {
+            return m_position.X;
+        }
+
         public static void setCrouching()
         {
             if (m_jumping == false && m_running == true)
