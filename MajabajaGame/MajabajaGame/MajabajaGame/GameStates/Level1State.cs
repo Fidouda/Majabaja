@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace MajabajaGame
 {
 
-    enum obstacleTiles : int { NOTHING =0, BARREL, HEART ,CRATES, TABLE, TRAP };
+    enum obstacleTiles : int { NOTHING =0, FLOORING, HEART ,CRATES, TABLE, TRAP, Z = 34 };
 
     class Level1State : AbstractGameState
     {
@@ -37,11 +37,13 @@ namespace MajabajaGame
         int DecoAcross = 16;
         int DecoDown = 8;
         int ObstAcross = 16;
-        int ObstDown = 8;
+        int ObstDown = 14;
 
         float distanceCharacterImpact = 0;
 
         //Collision table
+        Rectangle tilePos;
+        Rectangle m_tileActionPos;
         int m_collisionAction = 0;
 
         public Level1State(Game1 p_game)
@@ -53,6 +55,9 @@ namespace MajabajaGame
         public float getDistanceCharacterImpact()
         {
             return distanceCharacterImpact;
+        public TileMap getObstacleMap()
+        {
+            return level1Obstacle;
         }
 
         public override void LoadContent()
@@ -142,6 +147,8 @@ namespace MajabajaGame
                     reader.Dispose();
                 }
             }
+
+            Character.levelObstacle = level1Obstacle;
 
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
@@ -250,21 +257,22 @@ namespace MajabajaGame
                             tempValue1 = level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 55;
                         }
 
-                        Rectangle tileTemp = new Rectangle((x * 64) - offsetX2, (y * 64) - offsetY2, 64, 64);
+                        tilePos = new Rectangle((x * 64) - offsetX2, (y * 64) - offsetY2, 64, 64);
 
                         m_spriteBatch.Draw(
                             ObstacleTile.ObstacleTileSetTexture,
-                            tileTemp,
+                            tilePos,
                             ObstacleTile.GetSourceRectangle(tempValue1),
                             Color.White);
 
                         // If tile is an obstacle
                         if (tempValue1 != 0 && m_collisionAction == 0) 
                         {
-                            if (tileTemp.Intersects(Character.getRectangle()))
+                            if (tilePos.Intersects(Character.getRectangle()))
                             {
                                 m_collisionAction = tempValue1;
                                 distanceCharacterImpact = Character.getPositionX() - tileTemp.X;
+                                m_tileActionPos = tilePos;
                             }
                         }
                     }
@@ -287,6 +295,7 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
+            Character.camera = Camera.Location;
             Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level1Background.MapWidth - squaresAcross) * 128);
 
             // Loops song
@@ -306,13 +315,21 @@ namespace MajabajaGame
                     // DO NOTHING
                     break;
 
-                case (int)obstacleTiles.BARREL:
-                    m_lifeBar.removeHeart();
-                    Console.WriteLine("Case 2");
+                case (int)obstacleTiles.FLOORING:
+                    if(Character.isJumping() &&
+                        Character.getRectangle().Y + Character.getCharacterSize() <= tilePos.Y)
+                    {
+                        Character.setPositionY(m_tileActionPos.Y - Character.getCharacterSize());
+                    }
                     break;
 
                 case (int)obstacleTiles.HEART:
                     m_lifeBar.addHeart();
+                    Character.setPositionY(m_tileActionPos.Y - Character.getCharacterSize());
+                    break;
+
+                case (int)obstacleTiles.CRATES:
+                    Console.WriteLine("Case 2");
                     break;
 
                 case (int)obstacleTiles.TABLE:
@@ -320,7 +337,11 @@ namespace MajabajaGame
                     break;
 
                 case (int)obstacleTiles.TRAP:
-                    Console.WriteLine("Case 2");
+                    m_game.setGameState(new DeathState(m_game));
+                    break;
+
+                case (int)obstacleTiles.Z:
+                    m_game.setGameState(new DeathState(m_game));
                     break;
 
                 default:

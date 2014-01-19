@@ -196,6 +196,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObstacleTileSet.png">
+      <Name>ObstacleTileSet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="mainMenuBackground.jpg">
       <Name>mainMenuBackground</Name>
       <Importer>TextureImporter</Importer>

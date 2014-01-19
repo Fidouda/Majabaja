@@ -17,7 +17,9 @@ namespace MajabajaGame
         static int millisecondsPerFrame = 65;
         static int m_characterSize = 128;
         static int m_defaultXPosition = 5 * 32;
-        static int m_defaultYPosition = 10 * 32;
+        static int m_defaultYPosition = 9 * 32;
+        static int m_XPosition = 5 * 32;
+        static int m_YPosition = 9 * 32;
         static Rectangle m_position = new Rectangle(m_defaultXPosition, m_defaultYPosition, m_characterSize, m_characterSize);
         //One and only one of the 3 next bool should be true at the time.
         static bool m_running = true;
@@ -25,6 +27,10 @@ namespace MajabajaGame
         static bool m_crouching = false;
         static bool unCrouch = false; //Must be initialised to false
         static int crouchWaiting = 2; //Number of states the character stays crouched before going up
+        static int jumpingWaiting = 2;  //Number of states the character stays high before go down
+
+        public static TileMap levelObstacle;
+        public static Vector2 camera;
 
         public static Rectangle getRectangle()
         {
@@ -39,6 +45,16 @@ namespace MajabajaGame
         public static float getPositionX()
         {
             return m_position.X;
+        }
+
+        public static void setPositionY(int p_Y) 
+        {
+            m_YPosition = p_Y;
+        }
+
+        public static bool isJumping() 
+        {
+            return m_jumping;
         }
 
         public static void setCrouching()
@@ -63,6 +79,22 @@ namespace MajabajaGame
         {
             if (m_running)
             {
+                if (levelObstacle != null && levelObstacle.Rows[34 - ((480-Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID != '1')
+                {
+                    if (m_YPosition - m_position.Y == 0)
+                    {
+                        m_YPosition += 64;
+                    }
+                    
+                    if ( m_YPosition - m_position.Y > m_characterSize / 3)
+                        {
+                            m_position.Y += m_characterSize / 3; //21 pixels pour un bonhomme de 128 pixels.
+                        }
+                        else if (m_YPosition - m_position.Y < m_characterSize / 3) 
+                        {
+                            m_position.Y = m_YPosition;
+                        }
+                }
                 return runningLoop(gameTime);
             }
             else if (m_jumping)
@@ -128,20 +160,37 @@ namespace MajabajaGame
 
                 if (actualTileID < 48)
                 {
+                    // Raise
                     if (actualTileID < 43)
                     {
                         m_position.Y -= m_characterSize / 3; //21 pixels pour un bonhomme de 128 pixels.
-                    }
-                    else if (actualTileID < 48 && actualTileID > 44)
+                    } 
+                    // Stay up
+                    else if (actualTileID == 44 && jumpingWaiting > 0)
                     {
-                        m_position.Y += m_characterSize / 3; //21 pixels pour un bonhomme de 128 pixels.
+                        jumpingWaiting--;
+                        return actualTileID;
+                    }
+                    // Go Down
+                    else if (actualTileID < 48 && actualTileID > 43)
+                    {
+                        if ( m_YPosition - m_position.Y > m_characterSize / 3)
+                        {
+                            m_position.Y += m_characterSize / 3; //21 pixels pour un bonhomme de 128 pixels.
+                        }
+                        else if (m_YPosition - m_position.Y < m_characterSize / 3) 
+                        {
+                            m_position.Y = m_YPosition;
+                        }
+                        jumpingWaiting = 2; //Re-initialising the value
                     }
 
                     return actualTileID++;
                 }
                 else //fin de saut
                 {
-                    m_position.Y = m_defaultYPosition;
+                    // Stops on new surface of height m_YPosition
+                    m_position.Y = m_YPosition;
                     actualTileID = 40;
                     m_jumping = false;
                     m_running = true;
@@ -184,6 +233,7 @@ namespace MajabajaGame
                 else if (actualTileID == 23 && crouchWaiting == 0)//ready to go up
                 {
                     unCrouch = true;
+                    crouchWaiting = 2;
                     return --actualTileID;
                 }
                 else if (actualTileID > 16 && unCrouch)
