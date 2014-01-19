@@ -4,27 +4,44 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
+
     class Level2State : AbstractGameState
     {
+        private Song m_level2Music;
+        SoundEffectInstance soundEngineInstance;
+        SoundEffect magic;
+        
         // Objects to appear
         private LifeBar m_lifeBar;
         Texture2D m_liveHeart;
         Texture2D m_deadHeart;
 
+        SpriteBatch m_spriteBatch;
+        TileMap level2Background;
+        TileMap level2Decoration;
+        TileMap level2Obstacle;
+        int DecoAcross = 16;
+        int DecoDown = 8;
+        int ObstAcross = 16;
+        int ObstDown = 8;
+
         //private Rectangle background;
         //private Song m_level2Music;
 
-        SpriteBatch m_spriteBatch;
-        //TileMap level1 = new TileMap();
-        int squaresAcross = 26;
-        int squaresDown = 16;
+        int squaresAcross = 8;
+        int squaresDown = 4;
 
+        float distanceCharacterImpact = 0;
+
+        int m_collisionAction = 0;
 
         public Level2State(Game1 p_game)
             : base(p_game)
@@ -32,64 +49,234 @@ namespace MajabajaGame
             LoadContent();
         }
 
+        public float getDistanceCharacterImpact()
+        {
+            return distanceCharacterImpact;
+        }
+
         public override void LoadContent()
         {
-            //background.LoadContent();
-            //aSquare.LoadContent();
-            //m_level1Music = m_game.Content.Load<Song>("drumBeat");
-            //MediaPlayer.Play(m_levelwMusic);
+            // Load Music
+            m_level2Music = m_game.Content.Load<Song>("level1");
+            MediaPlayer.Play(m_level2Music);
 
-            // New SpriteBatch
+            //Load Sounds
+            magic = m_game.Content.Load<SoundEffect>("spell2");
+            
+            // Load Player
+            CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
+
+            // Load Tiles
+            using (var stream = TitleContainer.OpenStream("level2.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level2Background = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {          
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level2Background.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
+                }
+            }
+
+            using (var stream = TitleContainer.OpenStream("level2decoration.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level2Decoration = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level2Decoration.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
+                }
+            }
+
+            using (var stream = TitleContainer.OpenStream("level2obstacle.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level2Obstacle = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level2Obstacle.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
+                }
+            }
+
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
-            // Loads the image than positions buttons and set there active field
-            // Load
-            BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("part1_tileset");
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
             m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
 
-            // Making objects
-            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch,
-                m_liveHeart, m_deadHeart);
-            
+            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
 
-            // Music load and starts
-            //m_level2Music = m_game.Content.Load<Song>("level2");
-            //MediaPlayer.Play(m_backgroundMusic);
+            BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
+            DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
+            ObstacleTile.ObstacleTileSetTexture = m_game.Content.Load<Texture2D>("ObstacleTiles");
 
+            Camera.Location.Y = ((level2Background.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            // Draw tiles
-            m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            Vector2 firstSquare = new Vector2(Camera.Location.X / 32, Camera.Location.Y / 32);
-            int firstX = (int)firstSquare.X;
-            int firstY = (int)firstSquare.Y;
-            
-            Vector2 squareOffset = new Vector2(Camera.Location.X % 32, Camera.Location.Y % 32);
-            int offsetX = (int)squareOffset.X;
-            int offsetY = (int)squareOffset.Y;
-            
-            for (int y = 0; y < squaresDown; y++)
-            {
-                for (int x = 0; x < squaresAcross; x++)
-                {
-                    /*
-                    m_spriteBatch.Draw(
-                        Tile.TileSetTexture,
-                        new Rectangle((x * 32) - offsetX, (y * 32) - offsetY, 32, 32),
-                        Tile.GetSourceRectangle(level1.Rows[y + firstY].Columns[x + firstX].TileID),
-                        Color.White);
-                     * */
-                }
-            }
+            //Background Tiles
+            m_spriteBatch.Begin();
+                Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
+                int firstX = (int)firstSquare.X;
+                int firstY = (int)firstSquare.Y;
 
+                Vector2 squareOffset = new Vector2(Camera.Location.X % 128, Camera.Location.Y % 128);
+                int offsetX = (int)squareOffset.X;
+                int offsetY = (int)squareOffset.Y;
+
+                for (int y = 0; y < squaresDown; y++)
+                {
+                    for (int x = 0; x < squaresAcross; x++)
+                    {
+                        m_spriteBatch.Draw(
+                            BackgroundTile.BackgroundTileSetTexture,
+                            new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
+                            BackgroundTile.GetSourceRectangle(level2Background.Rows[y + firstY].Columns[x + firstX].TileID),
+                            Color.White);
+                    }
+                }
             m_spriteBatch.End();
 
-            // Draw objects
+			
+            //Decoration Tiles
+            m_spriteBatch.Begin();
+                Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+                int firstX1 = (int)firstSquare1.X;
+                int firstY1 = (int)firstSquare1.Y;
+
+                Vector2 squareOffset1 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+                int offsetX1 = (int)squareOffset1.X;
+                int offsetY1 = (int)squareOffset1.Y;
+
+                int tempValue = 0;
+
+                for (int y = 0; y < DecoDown; y++)
+                {
+                    for (int x = 0; x < DecoAcross; x++)
+                    {
+
+                        if (level2Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level2Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                        {
+                            tempValue = level2Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
+                        }
+                        else
+                        {
+                            tempValue = level2Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
+                        }
+                        
+
+                        m_spriteBatch.Draw(
+                            DecorationTile.DecorationTileSetTexture,
+                            new Rectangle((x * 64) - offsetX1, (y * 64) - offsetY1, 64, 64),
+                            DecorationTile.GetSourceRectangle(tempValue),
+                            Color.White);
+                    }
+                }
+            m_spriteBatch.End();
+
+
+            //Obstacle Tiles
+
+            //Reset of collision action
+            m_collisionAction = 0;
+
+            m_spriteBatch.Begin();
+                Vector2 firstSquare2 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+                int firstX2 = (int)firstSquare2.X;
+                int firstY2 = (int)firstSquare2.Y;
+
+                Vector2 squareOffset2 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+                int offsetX2 = (int)squareOffset2.X;
+                int offsetY2 = (int)squareOffset2.Y;
+
+                int tempValue1 = 0;
+
+                for (int y = 0; y < ObstDown; y++)
+                {
+                    for (int x = 0; x < ObstAcross; x++)
+                    {
+
+                        if (level2Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID >= 48 && level2Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID < 58)
+                        {
+                            tempValue1 = level2Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 48;
+                        }
+                        else
+                        {
+                            tempValue1 = level2Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 55;
+                        }
+
+                        Rectangle tileTemp = new Rectangle((x * 64) - offsetX2, (y * 64) - offsetY2, 64, 64);
+
+                        m_spriteBatch.Draw(
+                            ObstacleTile.ObstacleTileSetTexture,
+                            tileTemp,
+                            ObstacleTile.GetSourceRectangle(tempValue1),
+                            Color.White);
+
+                        // If tile is an obstacle
+                        if (tempValue1 != 0 && m_collisionAction == 0) 
+                        {
+                            if (tileTemp.Intersects(Character.getRectangle()))
+                            {
+                                m_collisionAction = tempValue1;
+                                distanceCharacterImpact = Character.getPositionX() - tileTemp.X;
+                            }
+                        }
+                    }
+                }
+            m_spriteBatch.End();
+
+
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
-            m_lifeBar.Draw();
+                // LifeBar
+                m_lifeBar.Draw();
+                // Character
+                m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
+                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
@@ -99,7 +286,49 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
-            //Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1.MapWidth - squaresAcross) * 32);
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level2Background.MapWidth - squaresAcross) * 128);
+
+            // Loops song
+            if(MediaPlayer.State == MediaState.Stopped)
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(m_level2Music);
+            }
+
+            //if (m_lifeBar.isEmpty())
+               // m_game.setGameState(new DeathState(m_game));
+                
+            switch (m_collisionAction)
+            {
+                case (int)obstacleTiles.NOTHING:
+                    Console.WriteLine("Case 2");
+                    // DO NOTHING
+                    break;
+
+                case (int)obstacleTiles.BARREL:
+                    m_lifeBar.removeHeart();
+                    Console.WriteLine("Case 2");
+                    break;
+
+                case (int)obstacleTiles.HEART:
+                    m_lifeBar.addHeart();
+                    break;
+
+                case (int)obstacleTiles.TABLE:
+                    Console.WriteLine("Case 2");
+                    break;
+
+                case (int)obstacleTiles.TRAP:
+                    Console.WriteLine("Case 2");
+                    break;
+
+                default:
+                    //Nothing;
+                    break;
+            }
+
+
+
             base.Update(gameTime);
         }
 
@@ -115,16 +344,16 @@ namespace MajabajaGame
                 // we can use the type of gesture to determine our behavior
                 switch (gesture.GestureType)
                 {
-                    /*
+                    
                     // on taps, we change the color of the selected sprite
-                    case GestureType.Tap:
+                    //case GestureType.Tap:
                     case GestureType.DoubleTap:
-                        if (selectedSprite != null)
                         {
-                            selectedSprite.ChangeColor();
+                            soundEngineInstance = magic.CreateInstance();
+                            soundEngineInstance.Play();
                         }
                         break;
-
+/*
                     // on holds, if no sprite is selected, we add a new sprite at the
                     // hold position and make it our selected sprite. otherwise we
                     // remove our selected sprite.
@@ -144,7 +373,7 @@ namespace MajabajaGame
                             selectedSprite = null;
                         }
                         break;
-                    */
+                    
                     // on drags, we just want to move the selected sprite with the drag
                     case GestureType.FreeDrag:
                         //if (spriteBatch != null)
@@ -153,16 +382,24 @@ namespace MajabajaGame
                             //spritePosition1.Y += gesture.Delta.Y;
                         }
                         break;
-                    /*
+                    */
                     // on flicks, we want to update the selected sprite's velocity with
                     // the flick velocity, which is in pixels per second.
                     case GestureType.Flick:
-                        if (selectedSprite != null)
                         {
-                            selectedSprite.Velocity = gesture.Delta;
+                            if (gesture.Delta.Y < 0)
+                            {
+                                //Jump
+                                Character.setJumping();
+                            }
+                            else
+                            {
+                                //Crouch
+                                Character.setCrouching();
+                            }
                         }
                         break;
-
+/*
                     // on pinches, we want to scale the selected sprite
                     case GestureType.Pinch:
                         if (selectedSprite != null)
