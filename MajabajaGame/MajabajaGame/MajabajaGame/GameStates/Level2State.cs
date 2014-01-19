@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
+    //enum obstacleTiles : int { NOTHING = 0, BARREL, HEART, CRATES, TABLE, TRAP };
 
     class Level2State : AbstractGameState
     {
@@ -303,11 +304,6 @@ namespace MajabajaGame
                 case (int)obstacleTiles.NOTHING:
                     Console.WriteLine("Case 2");
                     // DO NOTHING
-                    break;
-
-                case (int)obstacleTiles.BARREL:
-                    m_lifeBar.removeHeart();
-                    Console.WriteLine("Case 2");
                     break;
 
                 case (int)obstacleTiles.HEART:

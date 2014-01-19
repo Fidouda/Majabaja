@@ -55,6 +55,7 @@ namespace MajabajaGame
         public float getDistanceCharacterImpact()
         {
             return distanceCharacterImpact;
+        }
         public TileMap getObstacleMap()
         {
             return level1Obstacle;
@@ -271,7 +272,7 @@ namespace MajabajaGame
                             if (tilePos.Intersects(Character.getRectangle()))
                             {
                                 m_collisionAction = tempValue1;
-                                distanceCharacterImpact = Character.getPositionX() - tileTemp.X;
+                                distanceCharacterImpact = Character.getPositionX() - m_tileActionPos.X;
                                 m_tileActionPos = tilePos;
                             }
                         }
@@ -285,7 +286,7 @@ namespace MajabajaGame
                 m_lifeBar.Draw();
                 // Character
                 m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White);
+                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White /* FLIP THAT SHIT OUT OF HIM , 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0*/);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
