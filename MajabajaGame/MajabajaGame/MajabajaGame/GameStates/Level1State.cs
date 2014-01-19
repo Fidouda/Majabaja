@@ -269,7 +269,7 @@ namespace MajabajaGame
                 m_lifeBar.Draw();
                 // Character
                 m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White);
+                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White /* FLIP THAT SHIT OUT OF HIM , 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0*/);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
