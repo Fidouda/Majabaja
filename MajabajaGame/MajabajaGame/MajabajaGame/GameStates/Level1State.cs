@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace MajabajaGame
 {
 
-    enum obstacleTiles : int { NOTHING =0, INVISIBLEFLOORING, FLOORING, LEFTFLOOR, RIGHTFLOOR, BARREL ,CRATE, SPIKE, HEART, TRAP };
+    enum obstacleTiles : int { NOTHING =0, INVISIBLEFLOORING, FLOORING, LEFTFLOOR, RIGHTFLOOR, BARREL ,CRATE, SPIKE, HEART, TRAP = 9 };
 
     class Level1State : AbstractGameState
     {
