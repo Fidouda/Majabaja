@@ -44,7 +44,7 @@ namespace MajabajaGame
                 spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
                 // Loads the image than positions buttons and set there active field
-                m_backgroundImage = m_game.Content.Load<Texture2D>("background");
+                m_backgroundImage = m_game.Content.Load<Texture2D>("deathScreen");
                 m_playAgainButtonImage = m_game.Content.Load<Texture2D>("buttonPlayAgain");
                 m_rageQuitButtonImage = m_game.Content.Load<Texture2D>("buttonRageQuit");
 
