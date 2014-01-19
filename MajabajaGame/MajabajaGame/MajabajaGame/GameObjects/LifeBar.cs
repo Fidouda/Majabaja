@@ -25,7 +25,7 @@ namespace MajabajaGame
         {
             m_isEmpty = false;
             m_heartLimit = p_heartLimit;
-            m_nbHearts = p_heartLimit;
+            m_nbHearts = p_heartLimit -1;
 
             // Hard Coded Lifebar location
             m_heartPosition = new Vector2(0, 20);
@@ -48,7 +48,7 @@ namespace MajabajaGame
         public void addHeart()
         {
             
-            if (m_nbHearts > m_heartLimit)
+            if (m_nbHearts < m_heartLimit)
             {
                 m_nbHearts++;
             }

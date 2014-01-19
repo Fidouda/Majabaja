@@ -188,9 +188,16 @@
       <Name>spell2</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
-	</Compile>
+    </Compile>
     <Compile Include="blackObstacle.png">
       <Name>blackObstacle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ObstacleTileSet.png">
+      <Name>ObstacleTileSet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
