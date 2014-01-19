@@ -26,6 +26,7 @@ Content\spell2.xnb
 Content\blackObstacle.xnb
 Content\mainMenuBackground.xnb
 Content\ObstacleTileSet.xnb
+Content\ObstacleTiles.xnb
 Content\mainBackground.wma
 Content\level1.wma
 Content\deathMusic.wma
@@ -33,4 +34,7 @@ Content\levelSelectScreen.wma
 level1.txt
 level1decoration.txt
 level1obstacle.txt
+level2.txt
+level2decoration.txt
+level2obstacle.txt
 levelTest.txt

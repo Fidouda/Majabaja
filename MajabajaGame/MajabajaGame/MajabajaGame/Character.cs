@@ -42,6 +42,11 @@ namespace MajabajaGame
             return m_characterSize;
         }
 
+        public static float getPositionX()
+        {
+            return m_position.X;
+        }
+
         public static void setPositionY(int p_Y) 
         {
             m_YPosition = p_Y;
@@ -51,7 +56,6 @@ namespace MajabajaGame
         {
             return m_jumping;
         }
-
 
         public static void setCrouching()
         {

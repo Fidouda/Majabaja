@@ -138,7 +138,7 @@ namespace MajabajaGame
 
                     if (m_level2Button.getField().Contains(new Point(m_mouse.X, m_mouse.Y)))
                     {
-                        m_game.setGameState(new Level1State(m_game));
+                        m_game.setGameState(new Level2State(m_game));
                         MediaPlayer.Stop();
                     }
 
