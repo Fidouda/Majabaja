@@ -81,7 +81,37 @@ namespace MajabajaGame
 
             public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
             {
+                TouchCollection touches = TouchPanel.GetState();
 
+                while (TouchPanel.IsGestureAvailable)
+                {
+                    // read the next gesture from the queue
+                    GestureSample gesture = TouchPanel.ReadGesture();
+
+                    // we can use the type of gesture to determine our behavior
+                    switch (gesture.GestureType)
+                    {
+                        case GestureType.Tap:
+                            {
+                                if (m_playAgainButton.getField().Contains(new Point((int)gesture.Position.X, (int)gesture.Position.Y)))
+                                {
+                                    m_game.setGameState(new Level1State(m_game));
+                                    MediaPlayer.Stop();
+                                }
+
+                                if (m_rageQuitButton.getField().Contains(new Point((int)gesture.Position.X, (int)gesture.Position.Y)))
+                                {
+                                    m_game.Exit();
+                                }
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+
+
+/*
                 m_mouse = Mouse.GetState();
 
                 if (m_mouse.LeftButton == ButtonState.Released)
@@ -96,6 +126,7 @@ namespace MajabajaGame
                     {
                         m_game.Exit();
                     }
+ * */
                 }
 
                 this.HandleInputTouch(gameTime);

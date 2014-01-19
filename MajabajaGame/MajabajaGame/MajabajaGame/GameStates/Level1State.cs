@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace MajabajaGame
 {
 
-    enum obstacleTiles : int { NOTHING =0, FLOORING, HEART ,CRATES, TABLE, TRAP, Z = 34 };
+    enum obstacleTiles : int { NOTHING =0, INVISIBLEFLOORING, FLOORING, LEFTFLOOR, RIGHTFLOOR, BARREL ,CRATE, SPIKE, HEART, TRAP };
 
     class Level1State : AbstractGameState
     {
@@ -49,6 +49,7 @@ namespace MajabajaGame
         public Level1State(Game1 p_game)
             : base(p_game)
         {
+            resetLevel();
             LoadContent();
         }
 
@@ -59,6 +60,13 @@ namespace MajabajaGame
         public TileMap getObstacleMap()
         {
             return level1Obstacle;
+        }
+
+        public void resetLevel()
+        {
+            Camera.Location.Y = (16 * 128) - 480;
+            Camera.Location.X = 0;
+            Character.resetCharacter();
         }
 
         public override void LoadContent()
@@ -269,7 +277,7 @@ namespace MajabajaGame
                         // If tile is an obstacle
                         if (tempValue1 != 0 && m_collisionAction == 0) 
                         {
-                            if (tilePos.Intersects(Character.getRectangle()))
+                            if (tilePos.Intersects(Character.getRectangleCollision()))
                             {
                                 m_collisionAction = tempValue1;
                                 distanceCharacterImpact = Character.getPositionX() - m_tileActionPos.X;
@@ -308,15 +316,18 @@ namespace MajabajaGame
 
             //if (m_lifeBar.isEmpty())
                // m_game.setGameState(new DeathState(m_game));
-                
+            
+  
             switch (m_collisionAction)
             {
                 case (int)obstacleTiles.NOTHING:
-                    Console.WriteLine("Case 2");
                     // DO NOTHING
                     break;
 
+                case (int)obstacleTiles.INVISIBLEFLOORING:
                 case (int)obstacleTiles.FLOORING:
+                case (int)obstacleTiles.LEFTFLOOR:
+                case (int)obstacleTiles.RIGHTFLOOR:
                     if(Character.isJumping() &&
                         Character.getRectangle().Y + Character.getCharacterSize() <= tilePos.Y)
                     {
@@ -324,24 +335,17 @@ namespace MajabajaGame
                     }
                     break;
 
+                case (int)obstacleTiles.BARREL:
+                case (int)obstacleTiles.CRATE:
+                    m_lifeBar.removeHeart();
+                    break;
+
                 case (int)obstacleTiles.HEART:
                     m_lifeBar.addHeart();
-                    Character.setPositionY(m_tileActionPos.Y - Character.getCharacterSize());
                     break;
 
-                case (int)obstacleTiles.CRATES:
-                    Console.WriteLine("Case 2");
-                    break;
-
-                case (int)obstacleTiles.TABLE:
-                    Console.WriteLine("Case 2");
-                    break;
-
+                case (int)obstacleTiles.SPIKE:
                 case (int)obstacleTiles.TRAP:
-                    m_game.setGameState(new DeathState(m_game));
-                    break;
-
-                case (int)obstacleTiles.Z:
                     m_game.setGameState(new DeathState(m_game));
                     break;
 

@@ -327,19 +327,11 @@ namespace MajabajaGame
                     Character.setPositionY(m_tileActionPos.Y - Character.getCharacterSize());
                     break;
 
-                case (int)obstacleTiles.CRATES:
-                    Console.WriteLine("Case 2");
-                    break;
-
-                case (int)obstacleTiles.TABLE:
+                case (int)obstacleTiles.CRATE:
                     Console.WriteLine("Case 2");
                     break;
 
                 case (int)obstacleTiles.TRAP:
-                    m_game.setGameState(new DeathState(m_game));
-                    break;
-
-                case (int)obstacleTiles.Z:
                     m_game.setGameState(new DeathState(m_game));
                     break;
 
