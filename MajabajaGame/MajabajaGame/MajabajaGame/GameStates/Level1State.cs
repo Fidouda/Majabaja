@@ -252,7 +252,7 @@ namespace MajabajaGame
                             Color.White);
 
                         // If tile is an obstacle
-                        if (tempValue1 != 0 /*&& m_collisionAction == 0*/) 
+                        if (tempValue1 != 0 && m_collisionAction == 0) 
                         {
                             if (tileTemp.Intersects(Character.getRectangle()))
                             {
