@@ -37,8 +37,6 @@ namespace MajabajaGame
         int ObstAcross = 16;
         int ObstDown = 14;
 
-        float distanceCharacterImpact = 0;
-
         //Collision table
         Rectangle tilePos;
         Rectangle m_tileActionPos;
@@ -50,10 +48,6 @@ namespace MajabajaGame
             LoadContent();
         }
 
-        public float getDistanceCharacterImpact()
-        {
-            return distanceCharacterImpact;
-        }
         public TileMap getObstacleMap()
         {
             return level2Obstacle;
@@ -270,7 +264,6 @@ namespace MajabajaGame
                         if (tilePos.Intersects(Character.getRectangle()))
                         {
                             m_collisionAction = tempValue1;
-                            distanceCharacterImpact = Character.getPositionX() - m_tileActionPos.X;
                             m_tileActionPos = tilePos;
                         }
                     }

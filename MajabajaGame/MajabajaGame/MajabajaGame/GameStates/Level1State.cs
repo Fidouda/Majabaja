@@ -39,8 +39,6 @@ namespace MajabajaGame
         int ObstAcross = 16;
         int ObstDown = 14;
 
-        public float distanceCharacterImpact = 0;
-
         //Collision table
         Rectangle tilePos;
         Rectangle m_tileActionPos;
@@ -281,8 +279,6 @@ namespace MajabajaGame
                             if (tilePos.Intersects(Character.getRectangleCollision()))
                             {
                                 m_collisionAction = tempValue1;
-                                distanceCharacterImpact = Character.getRectangleCollision().X - tilePos.X;
-                                Character.setDistance(distanceCharacterImpact);
                                 m_tileActionPos = tilePos;
                             }
                         }
@@ -295,16 +291,9 @@ namespace MajabajaGame
                 // LifeBar
                 m_lifeBar.Draw();
                 // Character
-                if (Character.isInvincible())
-                {
-                    m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.Silver /* FLIP THAT SHIT OUT OF HIM , 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0*/);
-                }
-                else
-                {
-                    m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White /* FLIP THAT SHIT OUT OF HIM , 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0*/);
-                }
+                m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
+                CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White /* FLIP THAT SHIT OUT OF HIM , 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 0*/);
+
             m_spriteBatch.End();
 
             base.Draw(gameTime);
