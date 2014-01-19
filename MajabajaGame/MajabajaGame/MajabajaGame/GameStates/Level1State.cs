@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
@@ -15,6 +16,8 @@ namespace MajabajaGame
     {
         // Music
         private Song m_level1Music;
+        SoundEffectInstance soundEngineInstance;
+        SoundEffect magic;
 
         //lifebar
         private LifeBar m_lifeBar;
@@ -29,11 +32,6 @@ namespace MajabajaGame
         int DecoAcross = 16;
         int DecoDown = 8;
 
-        float gravity = -9.8F;
-        float resistance = 2F;
-        float speed = 0F;
-
-
         public Level1State(Game1 p_game)
             : base(p_game)
         {
@@ -47,6 +45,9 @@ namespace MajabajaGame
             // Load Music
             m_level1Music = m_game.Content.Load<Song>("level1");
             MediaPlayer.Play(m_level1Music);
+
+            //Load Sounds
+            magic = m_game.Content.Load<SoundEffect>("spell2");
             
             // Load Player
             CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
@@ -195,14 +196,6 @@ namespace MajabajaGame
 
             Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level1Background.MapWidth - squaresAcross) * 128);
 
-            if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.M))
-            {
-                // stop the music
-                //MediaPlayer.Stop();
-
-                // change state to menu
-                m_game.setGameState(new MainMenuState(m_game));
-            }
             // Loops song
             if(MediaPlayer.State == MediaState.Stopped)
             {
@@ -225,16 +218,16 @@ namespace MajabajaGame
                 // we can use the type of gesture to determine our behavior
                 switch (gesture.GestureType)
                 {
-                    /*
+                    
                     // on taps, we change the color of the selected sprite
-                    case GestureType.Tap:
+                    //case GestureType.Tap:
                     case GestureType.DoubleTap:
-                        if (selectedSprite != null)
                         {
-                            selectedSprite.ChangeColor();
+                            soundEngineInstance = magic.CreateInstance();
+                            soundEngineInstance.Play();
                         }
                         break;
-
+/*
                     // on holds, if no sprite is selected, we add a new sprite at the
                     // hold position and make it our selected sprite. otherwise we
                     // remove our selected sprite.
@@ -267,17 +260,17 @@ namespace MajabajaGame
                     // on flicks, we want to update the selected sprite's velocity with
                     // the flick velocity, which is in pixels per second.
                     case GestureType.Flick:
-                        //if (selectedSprite != null)
                         {
-                            if (gesture.Delta.Y > 0)
+                            if (gesture.Delta.Y < 0)
                             {
-                                Camera.Location.Y = MathHelper.Clamp(Camera.Location.Y - 100, 0, ((level1Background.MapHeight) * 128) - 480);
+                                //Jump
+                                Character.setJumping();
                             }
                             else
                             {
-                                Camera.Location.Y = MathHelper.Clamp(Camera.Location.Y + 100, 0, ((level1Background.MapHeight) * 128) - 480);
+                                //Crouch
+                                Character.setCrouching();
                             }
-                            
                         }
                         break;
 /*

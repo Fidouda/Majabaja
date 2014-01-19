@@ -38,7 +38,7 @@ namespace MajabajaGame
 
         public static void setCrouching()
         {
-            if (m_jumping = false && m_running == true)
+            if (m_jumping == false && m_running == true)
             {
                 m_crouching = true;
                 m_running = false;
@@ -49,7 +49,7 @@ namespace MajabajaGame
         {
             if (m_crouching == false && m_running == true)
             {
-                m_crouching = true;
+                m_jumping = true;
                 m_running = false;
             }
         }
