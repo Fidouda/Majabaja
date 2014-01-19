@@ -18,6 +18,7 @@ Content\level5ImageSelect.xnb
 Content\level6ImageSelect.xnb
 Content\levelSelectBackground.xnb
 Content\deathScreen.xnb
+Content\blackObstacle.xnb
 Content\mainBackground.xnb
 Content\level1.xnb
 Content\deathMusic.xnb
@@ -28,4 +29,5 @@ Content\deathMusic.wma
 Content\levelSelectScreen.wma
 level1.txt
 level1decoration.txt
+level1obstacle.txt
 levelTest.txt
