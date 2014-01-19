@@ -97,8 +97,6 @@ namespace MajabajaGame
 
                 // Music load and starts
                 m_selectMusic = m_game.Content.Load<Song>("levelSelectScreen");
-                MediaPlayer.IsRepeating = true;
-                MediaPlayer.Play(m_selectMusic);
             }
 
             public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -122,6 +120,11 @@ namespace MajabajaGame
 
             public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
             {
+                if (MediaPlayer.State == MediaState.Stopped)
+                {
+                    MediaPlayer.IsRepeating = true;
+                    MediaPlayer.Play(m_selectMusic);
+                }
 
                 m_mouse = Mouse.GetState();
 

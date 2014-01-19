@@ -184,6 +184,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="spell2.wav">
+      <Name>spell2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+	</Compile>
     <Compile Include="blackObstacle.png">
       <Name>blackObstacle</Name>
       <Importer>TextureImporter</Importer>

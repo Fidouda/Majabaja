@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
@@ -18,6 +19,8 @@ namespace MajabajaGame
     {
         // Music
         private Song m_level1Music;
+        SoundEffectInstance soundEngineInstance;
+        SoundEffect magic;
 
         // Lifebar
         private LifeBar m_lifeBar;
@@ -50,6 +53,9 @@ namespace MajabajaGame
             // Load Music
             m_level1Music = m_game.Content.Load<Song>("level1");
             MediaPlayer.Play(m_level1Music);
+
+            //Load Sounds
+            magic = m_game.Content.Load<SoundEffect>("spell2");
             
             // Load Player
             CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
@@ -275,6 +281,13 @@ namespace MajabajaGame
 
             Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level1Background.MapWidth - squaresAcross) * 128);
 
+            // Loops song
+            if(MediaPlayer.State == MediaState.Stopped)
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(m_level1Music);
+            }
+
             switch (m_collisionAction)
             {
                 case (int)obstacleTiles.NOTHING:
@@ -321,16 +334,16 @@ namespace MajabajaGame
                 // we can use the type of gesture to determine our behavior
                 switch (gesture.GestureType)
                 {
-                    /*
+                    
                     // on taps, we change the color of the selected sprite
-                    case GestureType.Tap:
+                    //case GestureType.Tap:
                     case GestureType.DoubleTap:
-                        if (selectedSprite != null)
                         {
-                            selectedSprite.ChangeColor();
+                            soundEngineInstance = magic.CreateInstance();
+                            soundEngineInstance.Play();
                         }
                         break;
-
+/*
                     // on holds, if no sprite is selected, we add a new sprite at the
                     // hold position and make it our selected sprite. otherwise we
                     // remove our selected sprite.
@@ -350,7 +363,7 @@ namespace MajabajaGame
                             selectedSprite = null;
                         }
                         break;
-                    */
+                    
                     // on drags, we just want to move the selected sprite with the drag
                     case GestureType.FreeDrag:
                         //if (spriteBatch != null)
@@ -359,16 +372,24 @@ namespace MajabajaGame
                             //spritePosition1.Y += gesture.Delta.Y;
                         }
                         break;
-                    /*
+                    */
                     // on flicks, we want to update the selected sprite's velocity with
                     // the flick velocity, which is in pixels per second.
                     case GestureType.Flick:
-                        if (selectedSprite != null)
                         {
-                            selectedSprite.Velocity = gesture.Delta;
+                            if (gesture.Delta.Y < 0)
+                            {
+                                //Jump
+                                Character.setJumping();
+                            }
+                            else
+                            {
+                                //Crouch
+                                Character.setCrouching();
+                            }
                         }
                         break;
-
+/*
                     // on pinches, we want to scale the selected sprite
                     case GestureType.Pinch:
                         if (selectedSprite != null)
