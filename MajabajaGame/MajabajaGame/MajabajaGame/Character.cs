@@ -43,7 +43,7 @@ namespace MajabajaGame
                 actualTileID = 0;
                 return actualTileID;
             }
-        } 
+        }
 
         public static int runningLoop(GameTime gameTime)
         {

@@ -29,6 +29,10 @@ namespace MajabajaGame
         int DecoAcross = 16;
         int DecoDown = 8;
 
+        float gravity = -9.8F;
+        float resistance = 2F;
+        float speed = 0F;
+
 
         public Level1State(Game1 p_game)
             : base(p_game)
@@ -250,7 +254,7 @@ namespace MajabajaGame
                             selectedSprite = null;
                         }
                         break;
-                    */
+                    
                     // on drags, we just want to move the selected sprite with the drag
                     case GestureType.FreeDrag:
                         //if (spriteBatch != null)
@@ -259,16 +263,24 @@ namespace MajabajaGame
                             //spritePosition1.Y += gesture.Delta.Y;
                         }
                         break;
-                    /*
+                    */
                     // on flicks, we want to update the selected sprite's velocity with
                     // the flick velocity, which is in pixels per second.
                     case GestureType.Flick:
-                        if (selectedSprite != null)
+                        //if (selectedSprite != null)
                         {
-                            selectedSprite.Velocity = gesture.Delta;
+                            if (gesture.Delta.Y > 0)
+                            {
+                                Camera.Location.Y = MathHelper.Clamp(Camera.Location.Y - 100, 0, ((level1Background.MapHeight) * 128) - 480);
+                            }
+                            else
+                            {
+                                Camera.Location.Y = MathHelper.Clamp(Camera.Location.Y + 100, 0, ((level1Background.MapHeight) * 128) - 480);
+                            }
+                            
                         }
                         break;
-
+/*
                     // on pinches, we want to scale the selected sprite
                     case GestureType.Pinch:
                         if (selectedSprite != null)
