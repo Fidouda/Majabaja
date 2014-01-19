@@ -71,6 +71,7 @@
     <Compile Include="GameStates\DeathState.cs" />
     <Compile Include="GameObjects\Button.cs" />
     <Compile Include="GameStates\AbstractGameState.cs" />
+    <Compile Include="GameStates\IntroScreenState.cs" />
     <Compile Include="GameStates\Level1State.cs" />
     <Compile Include="GameStates\Level2State.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
