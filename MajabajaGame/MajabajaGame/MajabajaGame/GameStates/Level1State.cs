@@ -49,6 +49,7 @@ namespace MajabajaGame
         public Level1State(Game1 p_game)
             : base(p_game)
         {
+            resetLevel();
             LoadContent();
         }
 
@@ -59,6 +60,13 @@ namespace MajabajaGame
         public TileMap getObstacleMap()
         {
             return level1Obstacle;
+        }
+
+        public void resetLevel()
+        {
+            Camera.Location.Y = (16 * 128) - 480;
+            Camera.Location.X = 0;
+            Character.resetCharacter();
         }
 
         public override void LoadContent()
@@ -269,7 +277,7 @@ namespace MajabajaGame
                         // If tile is an obstacle
                         if (tempValue1 != 0 && m_collisionAction == 0) 
                         {
-                            if (tilePos.Intersects(Character.getRectangle()))
+                            if (tilePos.Intersects(Character.getRectangleCollision()))
                             {
                                 m_collisionAction = tempValue1;
                                 distanceCharacterImpact = Character.getPositionX() - m_tileActionPos.X;

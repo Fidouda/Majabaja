@@ -32,10 +32,42 @@ namespace MajabajaGame
         public static TileMap levelObstacle;
         public static Vector2 camera;
 
+        public static void resetCharacter()
+        {
+           actualTileID = 0;
+           timeSinceLastFrame = 0;
+           millisecondsPerFrame = 65;
+           m_characterSize = 128;
+           m_defaultXPosition = 5 * 32;
+           m_defaultYPosition = 9 * 32;
+           m_XPosition = 5 * 32;
+           m_YPosition = 9 * 32;
+           m_position = new Rectangle(m_defaultXPosition, m_defaultYPosition, m_characterSize, m_characterSize);
+           //One and only one of the 3 next bool should be true at the time.
+           m_running = true;
+           m_jumping = false;
+           m_crouching = false;
+           unCrouch = false; //Must be initialised to false
+           crouchWaiting = 2; //Number of states the character stays crouched before going up
+           jumpingWaiting = 2;  //Number of states the character stays high before go down
+
+           levelObstacle = null;
+           camera = Vector2.Zero;
+        }
+
         public static Rectangle getRectangle()
         {
             return m_position;
         }
+
+        public static Rectangle getRectangleCollision()
+        {
+            if (m_crouching)
+            {
+                return new Rectangle(m_defaultXPosition, m_defaultYPosition + 64, m_characterSize, m_characterSize / 2);
+            }
+            return m_position;
+        }             
 
         public static int getCharacterSize()
         {
@@ -79,7 +111,7 @@ namespace MajabajaGame
         {
             if (m_running)
             {
-                if (levelObstacle != null && levelObstacle.Rows[34 - ((480-Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID != '1')
+                if (levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID != '1' || m_YPosition - m_position.Y != 0)
                 {
                     if (m_YPosition - m_position.Y == 0)
                     {
@@ -103,6 +135,22 @@ namespace MajabajaGame
             }
             else if (m_crouching)
             {
+                if (levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID != '1')
+                {
+                    if (m_YPosition - m_position.Y == 0)
+                    {
+                        m_YPosition += 64;
+                    }
+
+                    if (m_YPosition - m_position.Y > m_characterSize / 3)
+                    {
+                        m_position.Y += m_characterSize / 3; //21 pixels pour un bonhomme de 128 pixels.
+                    }
+                    else if (m_YPosition - m_position.Y < m_characterSize / 3)
+                    {
+                        m_position.Y = m_YPosition;
+                    }
+                }
                return crouchingLoop(gameTime);
             }
             else // Should never happen.
