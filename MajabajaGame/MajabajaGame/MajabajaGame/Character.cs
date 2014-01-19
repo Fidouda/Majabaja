@@ -26,6 +26,8 @@ namespace MajabajaGame
         static bool m_jumping = false;
         static bool m_crouching = false;
         static bool unCrouch = false; //Must be initialised to false
+        static bool invincible = false;
+        static float distanceCharacterImpact = 0;
         static int crouchWaiting = 2; //Number of states the character stays crouched before going up
         static int jumpingWaiting = 2;  //Number of states the character stays high before go down
 
@@ -82,6 +84,11 @@ namespace MajabajaGame
         public static void setPositionY(int p_Y) 
         {
             m_YPosition = p_Y;
+        }
+
+        public static void setDistance(float distance)
+        {
+            distanceCharacterImpact = distance;
         }
 
         public static bool isJumping() 
@@ -256,8 +263,6 @@ namespace MajabajaGame
             }
         }
 
-
-
         public static int crouchingLoop(GameTime gameTime)
         {
             if (!m_crouching || actualTileID < 16 || actualTileID > 23)
@@ -305,6 +310,19 @@ namespace MajabajaGame
             {
                 return actualTileID;
             }
+
+        }
+        public static bool isInvincible()
+        {
+            if (distanceCharacterImpact >= 0.0 && distanceCharacterImpact < 100000)
+            {
+                invincible = true;
+            }
+            else
+            {
+                invincible = false;
+            }
+            return invincible;
         }
     }
 }
