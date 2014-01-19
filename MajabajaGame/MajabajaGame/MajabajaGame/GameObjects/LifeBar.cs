@@ -74,13 +74,13 @@ namespace MajabajaGame
         {
             for (int i = 0; i < m_nbHearts; ++i) 
             {
-                m_heartPosition.X += 20;
+                m_heartPosition.X += 50;
                 m_spriteBatch.Draw(m_liveHeart, m_heartPosition, Color.White);
             }
 
             for (int j = 0; j < m_heartLimit - m_nbHearts; j++)
             {
-                m_heartPosition.X += 20;
+                m_heartPosition.X += 50;
                 m_spriteBatch.Draw(m_deadHeart, m_heartPosition, Color.White);
             }
 

@@ -14,17 +14,26 @@ namespace MajabajaGame
 
         static int actualTileID = 0;
         static int timeSinceLastFrame = 0;
-        static int millisecondsPerFrame = 75;
-        static Rectangle m_position = new Rectangle(5 * 32, 12 * 32, 64, 64);
+        static int millisecondsPerFrame = 65;
+        static int m_characterSize = 128;
+        static int m_defaultXPosition = 5 * 32;
+        static int m_defaultYPosition = 10 * 32;
+        static Rectangle m_position = new Rectangle(m_defaultXPosition, m_defaultYPosition, m_characterSize, m_characterSize);
         static bool m_running = false;
         static bool m_jumping = false;
         static bool m_crouching = false;
-        public static Rectangle getRectangle() 
+
+        public static Rectangle getRectangle()
         {
             return m_position;
         }
 
+        public static int getCharacterSize()
+        {
+            return m_characterSize;
+        }
 
+        // Ne devrait plus servir (lis toutes les tiles du bonhomme)
         public static int nextTileID()
         {
             if (actualTileID < 64)
@@ -34,13 +43,14 @@ namespace MajabajaGame
                 actualTileID = 0;
                 return actualTileID;
             }
-        }
+        } 
 
         public static int runningLoop(GameTime gameTime)
         {
-            if (!m_running) 
+            if (!m_running)
             {
                 actualTileID = 4;
+                m_running = true;
             }
 
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
@@ -63,9 +73,11 @@ namespace MajabajaGame
             }
         }
 
+
+
         public static int jumpingLoop(GameTime gameTime)
         {
-            if (!m_jumping) 
+            if (!m_jumping)
             {
                 actualTileID = 40;
                 m_jumping = true;
@@ -80,23 +92,18 @@ namespace MajabajaGame
                 {
                     if (actualTileID < 43)
                     {
-                        m_position.Y -= 20;
+                        m_position.Y -= m_characterSize / 6; //21 pixels pour un bonhomme de 128 pixels.
                     }
                     else if (actualTileID > 45)
                     {
-                        m_position.Y += 20;
-                    }
-                    else
-                    {
-                        
+                        m_position.Y += m_characterSize / 6; //21 pixels pour un bonhomme de 128 pixels.
                     }
 
-                    
                     return actualTileID++;
                 }
                 else
                 {
-                    m_position.Y = 12 * 32;
+                    m_position.Y = m_defaultYPosition;
                     actualTileID = 40;
                     return actualTileID;
                 }
