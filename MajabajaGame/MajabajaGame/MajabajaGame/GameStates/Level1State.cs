@@ -21,6 +21,8 @@ namespace MajabajaGame
         private Song m_level1Music;
         SoundEffectInstance soundEngineInstance;
         SoundEffect magic;
+        SoundEffect m_life;
+        SoundEffect m_hurt;
 
         // Lifebar
         private LifeBar m_lifeBar;
@@ -76,6 +78,8 @@ namespace MajabajaGame
 
             //Load Sounds
             magic = m_game.Content.Load<SoundEffect>("spell2");
+            m_life = m_game.Content.Load<SoundEffect>("Life");
+            m_hurt = m_game.Content.Load<SoundEffect>("Hit_Hurt");
             
             // Load Player
             CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
@@ -163,7 +167,8 @@ namespace MajabajaGame
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
             m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
 
-            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
+
+            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart, m_life, m_hurt);
 
             BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
             DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
@@ -313,8 +318,10 @@ namespace MajabajaGame
                 MediaPlayer.Play(m_level1Music);
             }
 
-            //if (m_lifeBar.isEmpty())
-               // m_game.setGameState(new DeathState(m_game));
+            if (m_lifeBar.isEmpty())
+            {
+                m_game.setGameState(new DeathState(m_game));
+            }
             
   
             switch (m_collisionAction)

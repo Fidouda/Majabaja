@@ -19,6 +19,8 @@ namespace MajabajaGame
         private Song m_level2Music;
         SoundEffectInstance soundEngineInstance;
         SoundEffect magic;
+        SoundEffect m_life;
+        SoundEffect m_hurt;
 
         // Lifebar
         private LifeBar m_lifeBar;
@@ -41,6 +43,11 @@ namespace MajabajaGame
         Rectangle tilePos;
         Rectangle m_tileActionPos;
         int m_collisionAction = 0;
+
+        int timeFromImpact = 0;
+        int invincibleTime = 290;
+        int timeFromHeart = 0;
+        int HeartTime = 290;
 
         public Level2State(Game1 p_game)
             : base(p_game)
@@ -148,7 +155,7 @@ namespace MajabajaGame
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
             m_deadHeart = m_game.Content.Load<Texture2D>("heart_empty");
 
-            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart);
+            m_lifeBar = new LifeBar(/*Put player attribute here*/ 4, m_spriteBatch, m_liveHeart, m_deadHeart, m_life, m_hurt);
 
             BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
             DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
@@ -297,17 +304,21 @@ namespace MajabajaGame
                 MediaPlayer.Play(m_level2Music);
             }
 
-            //if (m_lifeBar.isEmpty())
-            // m_game.setGameState(new DeathState(m_game));
+            if (m_lifeBar.isEmpty())
+            {
+                m_game.setGameState(new DeathState(m_game));
+            }
 
             switch (m_collisionAction)
             {
                 case (int)obstacleTiles.NOTHING:
-                    Console.WriteLine("Case 2");
                     // DO NOTHING
                     break;
 
+                case (int)obstacleTiles.INVISIBLEFLOORING:
                 case (int)obstacleTiles.FLOORING:
+                case (int)obstacleTiles.LEFTFLOOR:
+                case (int)obstacleTiles.RIGHTFLOOR:
                     if (Character.isJumping() &&
                         Character.getRectangle().Y + Character.getCharacterSize() <= tilePos.Y)
                     {
@@ -315,15 +326,26 @@ namespace MajabajaGame
                     }
                     break;
 
-                case (int)obstacleTiles.HEART:
-                    m_lifeBar.addHeart();
-                    Character.setPositionY(m_tileActionPos.Y - Character.getCharacterSize());
-                    break;
-
+                case (int)obstacleTiles.BARREL:
                 case (int)obstacleTiles.CRATE:
-                    Console.WriteLine("Case 2");
+                    timeFromImpact += gameTime.ElapsedGameTime.Milliseconds;
+                    if (timeFromImpact > invincibleTime)
+                    {
+                        timeFromImpact = 0;
+                        m_lifeBar.removeHeart();
+                    }
                     break;
 
+                case (int)obstacleTiles.HEART:
+                    timeFromHeart += gameTime.ElapsedGameTime.Milliseconds;
+                    if (timeFromHeart > HeartTime)
+                    {
+                        timeFromHeart = 0;
+                        m_lifeBar.addHeart();
+                    }
+                    break;
+
+                case (int)obstacleTiles.SPIKE:
                 case (int)obstacleTiles.TRAP:
                     m_game.setGameState(new DeathState(m_game));
                     break;
