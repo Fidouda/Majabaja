@@ -111,7 +111,9 @@ namespace MajabajaGame
         {
             if (m_running)
             {
-                if (levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID == '0' || m_YPosition - m_position.Y != 0)
+                if ((levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID == '0' ||
+                    levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID > '4')
+                    || m_YPosition - m_position.Y != 0)
                 {
                     if (m_YPosition - m_position.Y == 0)
                     {
@@ -135,7 +137,8 @@ namespace MajabajaGame
             }
             else if (m_crouching)
             {
-                if (levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID == '0')
+                if ((levelObstacle != null && levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID == '0' ||
+                    levelObstacle.Rows[34 - ((480 - Character.m_position.Y) / 64)].Columns[((int)camera.X + Character.m_position.X) / 64].TileID > '4'))
                 {
                     if (m_YPosition - m_position.Y == 0)
                     {

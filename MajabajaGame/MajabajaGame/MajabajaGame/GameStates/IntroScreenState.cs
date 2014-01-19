@@ -46,8 +46,6 @@ namespace MajabajaGame
 
             // Music load and starts
             m_introMusic = m_game.Content.Load<Song>("Brirfing_theme_0");
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Play(m_introMusic);
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -62,6 +60,11 @@ namespace MajabajaGame
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (MediaPlayer.State == MediaState.Stopped)
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(m_introMusic);
+            }
 
             m_mouse = Mouse.GetState();
 
