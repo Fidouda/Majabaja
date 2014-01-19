@@ -200,11 +200,11 @@ namespace MajabajaGame
                 m_game.setGameState(new MainMenuState(m_game));
             }
             // Loops song
-            //if(MediaPlayer.MediaStateChanged == )
-            //{
-            //    MediaPlayer.IsRepeating = true;
-            //    MediaPlayer.Play(m_level1Music);
-            //}
+            if(MediaPlayer.State == MediaState.Stopped)
+            {
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Play(m_level1Music);
+            }
 
             base.Update(gameTime);
         }

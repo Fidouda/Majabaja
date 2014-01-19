@@ -66,6 +66,7 @@ namespace MajabajaGame
             m_backgroundMusic = m_game.Content.Load<Song>("mainBackground");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(m_backgroundMusic);
+
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
