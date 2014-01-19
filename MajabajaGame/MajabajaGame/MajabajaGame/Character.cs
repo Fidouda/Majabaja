@@ -52,7 +52,6 @@ namespace MajabajaGame
            unCrouch = false; //Must be initialised to false
            crouchWaiting = 2; //Number of states the character stays crouched before going up
            jumpingWaiting = 2;  //Number of states the character stays high before go down
-
            levelObstacle = null;
            camera = Vector2.Zero;
         }
@@ -76,19 +75,9 @@ namespace MajabajaGame
             return m_characterSize;
         }
 
-        public static float getPositionX()
-        {
-            return m_position.X;
-        }
-
         public static void setPositionY(int p_Y) 
         {
             m_YPosition = p_Y;
-        }
-
-        public static void setDistance(float distance)
-        {
-            distanceCharacterImpact = distance;
         }
 
         public static bool isJumping() 
@@ -312,17 +301,6 @@ namespace MajabajaGame
             }
 
         }
-        public static bool isInvincible()
-        {
-            if (distanceCharacterImpact >= 0.0 && distanceCharacterImpact < 100000)
-            {
-                invincible = true;
-            }
-            else
-            {
-                invincible = false;
-            }
-            return invincible;
-        }
+
     }
 }
