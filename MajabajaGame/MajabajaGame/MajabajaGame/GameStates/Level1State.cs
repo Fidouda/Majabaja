@@ -288,6 +288,9 @@ namespace MajabajaGame
                 MediaPlayer.Play(m_level1Music);
             }
 
+            if (m_lifeBar.isEmpty())
+                m_game.setGameState(new DeathState(m_game));
+                
             switch (m_collisionAction)
             {
                 case (int)obstacleTiles.NOTHING:

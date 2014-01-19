@@ -51,11 +51,11 @@ namespace MajabajaGame
                 // Positions
                 m_backgroundPosition = new Vector2(0, 0);
 
-                m_playButtonPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_playAgainButtonImage.Width / 2,
-                    m_game.GraphicsDevice.Viewport.Height / 3 - m_playAgainButtonImage.Height / 2);
+                m_playButtonPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width *3 / 5 - m_playAgainButtonImage.Width / 2,
+                    m_game.GraphicsDevice.Viewport.Height * 7 / 15 - m_playAgainButtonImage.Height / 2);
 
-                m_quitButtontPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_rageQuitButtonImage.Width / 2,
-                    m_game.GraphicsDevice.Viewport.Height * 2 / 3 - m_rageQuitButtonImage.Height / 2);
+                m_quitButtontPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width *3 / 5 - m_rageQuitButtonImage.Width / 2,
+                    m_game.GraphicsDevice.Viewport.Height * 12 / 15 - m_rageQuitButtonImage.Height / 2);
 
                 // Create Button
                 m_playAgainButton = new Button(spriteBatch, m_playAgainButtonImage, m_playButtonPosition);
