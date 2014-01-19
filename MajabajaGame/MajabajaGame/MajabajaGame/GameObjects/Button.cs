@@ -6,9 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-
-public enum ButtonStatus {Normal, Highlighted, Clicked}
-
 public class Button
 {
     Texture2D m_image;

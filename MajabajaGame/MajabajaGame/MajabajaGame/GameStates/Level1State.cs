@@ -12,6 +12,9 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
+
+    enum obstacleTiles : int { NOTHING =0, BARREL, HEART ,CRATES, TABLE, TRAP };
+
     class Level1State : AbstractGameState
     {
         // Music
@@ -19,18 +22,25 @@ namespace MajabajaGame
         SoundEffectInstance soundEngineInstance;
         SoundEffect magic;
 
-        //lifebar
+        // Lifebar
         private LifeBar m_lifeBar;
         Texture2D m_liveHeart;
         Texture2D m_deadHeart;
 
+        // Tiles
         SpriteBatch m_spriteBatch;
         TileMap level1Background;
         TileMap level1Decoration;
+        TileMap level1Obstacle;
         int squaresAcross = 8;
         int squaresDown = 4;
         int DecoAcross = 16;
         int DecoDown = 8;
+        int ObstAcross = 16;
+        int ObstDown = 8;
+
+        //Collision table
+        int m_collisionAction = 0;
 
         public Level1State(Game1 p_game)
             : base(p_game)
@@ -40,8 +50,6 @@ namespace MajabajaGame
 
         public override void LoadContent()
         {
-
-
             // Load Music
             m_level1Music = m_game.Content.Load<Song>("level1");
             MediaPlayer.Play(m_level1Music);
@@ -103,6 +111,31 @@ namespace MajabajaGame
                 }
             }
 
+            using (var stream = TitleContainer.OpenStream("level1obstacle.txt"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    int length = Convert.ToInt16(reader.ReadLine());
+                    int height = Convert.ToInt16(reader.ReadLine());
+
+                    level1Obstacle = new TileMap(length, height);
+
+                    while (!reader.EndOfStream)
+                    {
+                        for (int i = 0; i < height; ++i)
+                        {
+                            string buffer = Convert.ToString((reader.ReadLine()));
+                            for (int j = 0; j < length; ++j)
+                            {
+                                level1Obstacle.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                            }
+                        }
+
+                    }
+                    reader.Dispose();
+                }
+            }
+
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
             m_liveHeart = m_game.Content.Load<Texture2D>("heart_full");
@@ -112,6 +145,7 @@ namespace MajabajaGame
 
             BackgroundTile.BackgroundTileSetTexture = m_game.Content.Load<Texture2D>("TileSetBackground");
             DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
+            ObstacleTile.ObstacleTileSetTexture = m_game.Content.Load<Texture2D>("blackObstacle");
 
             Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
         }
@@ -119,65 +153,116 @@ namespace MajabajaGame
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             //Background Tiles
-
             m_spriteBatch.Begin();
-            Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
-            int firstX = (int)firstSquare.X;
-            int firstY = (int)firstSquare.Y;
+                Vector2 firstSquare = new Vector2(Camera.Location.X / 128, Camera.Location.Y / 128);
+                int firstX = (int)firstSquare.X;
+                int firstY = (int)firstSquare.Y;
 
-            Vector2 squareOffset = new Vector2(Camera.Location.X % 128, Camera.Location.Y % 128);
-            int offsetX = (int)squareOffset.X;
-            int offsetY = (int)squareOffset.Y;
+                Vector2 squareOffset = new Vector2(Camera.Location.X % 128, Camera.Location.Y % 128);
+                int offsetX = (int)squareOffset.X;
+                int offsetY = (int)squareOffset.Y;
 
-            for (int y = 0; y < squaresDown; y++)
-            {
-                for (int x = 0; x < squaresAcross; x++)
+                for (int y = 0; y < squaresDown; y++)
                 {
-                    m_spriteBatch.Draw(
-                        BackgroundTile.BackgroundTileSetTexture,
-                        new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
-                        BackgroundTile.GetSourceRectangle(level1Background.Rows[y + firstY].Columns[x + firstX].TileID),
-                        Color.White);
+                    for (int x = 0; x < squaresAcross; x++)
+                    {
+                        m_spriteBatch.Draw(
+                            BackgroundTile.BackgroundTileSetTexture,
+                            new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
+                            BackgroundTile.GetSourceRectangle(level1Background.Rows[y + firstY].Columns[x + firstX].TileID),
+                            Color.White);
+                    }
                 }
-            }
             m_spriteBatch.End();
 
 			
             //Decoration Tiles
             m_spriteBatch.Begin();
-            Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
-            int firstX1 = (int)firstSquare1.X;
-            int firstY1 = (int)firstSquare1.Y;
+                Vector2 firstSquare1 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+                int firstX1 = (int)firstSquare1.X;
+                int firstY1 = (int)firstSquare1.Y;
 
-            Vector2 squareOffset1 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
-            int offsetX1 = (int)squareOffset1.X;
-            int offsetY1 = (int)squareOffset1.Y;
+                Vector2 squareOffset1 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+                int offsetX1 = (int)squareOffset1.X;
+                int offsetY1 = (int)squareOffset1.Y;
 
-            int tempValue = 0;
+                int tempValue = 0;
 
-            for (int y = 0; y < DecoDown; y++)
-            {
-                for (int x = 0; x < DecoAcross; x++)
+                for (int y = 0; y < DecoDown; y++)
                 {
-
-                    if (level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                    for (int x = 0; x < DecoAcross; x++)
                     {
-                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
-                    }
-                    else
-                    {
-                        tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
-                    }
-                    
 
-                    m_spriteBatch.Draw(
-                        DecorationTile.DecorationTileSetTexture,
-                        new Rectangle((x * 64) - offsetX1, (y * 64) - offsetY1, 64, 64),
-                        DecorationTile.GetSourceRectangle(tempValue),
-                        Color.White);
+                        if (level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                        {
+                            tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
+                        }
+                        else
+                        {
+                            tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
+                        }
+                        
+
+                        m_spriteBatch.Draw(
+                            DecorationTile.DecorationTileSetTexture,
+                            new Rectangle((x * 64) - offsetX1, (y * 64) - offsetY1, 64, 64),
+                            DecorationTile.GetSourceRectangle(tempValue),
+                            Color.White);
+                    }
                 }
-            }
             m_spriteBatch.End();
+
+
+            //Obstacle Tiles
+
+            //Reset of collision action
+            m_collisionAction = 0;
+
+            m_spriteBatch.Begin();
+                Vector2 firstSquare2 = new Vector2(Camera.Location.X / 64, Camera.Location.Y / 64);
+                int firstX2 = (int)firstSquare2.X;
+                int firstY2 = (int)firstSquare2.Y;
+
+                Vector2 squareOffset2 = new Vector2(Camera.Location.X % 64, Camera.Location.Y % 64);
+                int offsetX2 = (int)squareOffset2.X;
+                int offsetY2 = (int)squareOffset2.Y;
+
+                int tempValue1 = 0;
+
+                for (int y = 0; y < ObstDown; y++)
+                {
+                    for (int x = 0; x < ObstAcross; x++)
+                    {
+
+                        if (level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID >= 48 && level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID < 58)
+                        {
+                            tempValue1 = level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 48;
+                        }
+                        else
+                        {
+                            tempValue1 = level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 55;
+                        }
+
+                        Rectangle tileTemp = new Rectangle((x * 64) - offsetX2, (y * 64) - offsetY2, 64, 64);
+
+                        m_spriteBatch.Draw(
+                            ObstacleTile.ObstacleTileSetTexture,
+                            tileTemp,
+                            ObstacleTile.GetSourceRectangle(tempValue1),
+                            Color.White);
+
+                        // If tile is an obstacle
+                        if (tempValue1 != 0 /*&& m_collisionAction == 0*/) 
+                        {
+                            if (tileTemp.Intersects(Character.getRectangle()))
+                            {
+                                m_collisionAction = tempValue1;
+                            }
+                        }
+                    }
+                }
+            m_spriteBatch.End();
+
 
             m_spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 // LifeBar
@@ -202,6 +287,37 @@ namespace MajabajaGame
                 MediaPlayer.IsRepeating = true;
                 MediaPlayer.Play(m_level1Music);
             }
+
+            switch (m_collisionAction)
+            {
+                case (int)obstacleTiles.NOTHING:
+                    Console.WriteLine("Case 2");
+                    // DO NOTHING
+                    break;
+
+                case (int)obstacleTiles.BARREL:
+                    m_lifeBar.removeHeart();
+                    Console.WriteLine("Case 2");
+                    break;
+
+                case (int)obstacleTiles.HEART:
+                    m_lifeBar.addHeart();
+                    break;
+
+                case (int)obstacleTiles.TABLE:
+                    Console.WriteLine("Case 2");
+                    break;
+
+                case (int)obstacleTiles.TRAP:
+                    Console.WriteLine("Case 2");
+                    break;
+
+                default:
+                    //Nothing;
+                    break;
+            }
+
+
 
             base.Update(gameTime);
         }

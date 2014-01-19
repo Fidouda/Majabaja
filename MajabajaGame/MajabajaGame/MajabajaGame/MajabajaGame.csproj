@@ -98,6 +98,9 @@
     <Content Include="level1decoration.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="level1obstacle.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="levelTest.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

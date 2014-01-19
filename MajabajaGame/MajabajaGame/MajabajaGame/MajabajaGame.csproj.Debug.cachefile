@@ -23,10 +23,12 @@ Content\deathMusic.xnb
 Content\levelSelectScreen.xnb
 Content\deathScreen.xnb
 Content\spell2.xnb
+Content\blackObstacle.xnb
 Content\mainBackground.wma
 Content\level1.wma
 Content\deathMusic.wma
 Content\levelSelectScreen.wma
 level1.txt
 level1decoration.txt
+level1obstacle.txt
 levelTest.txt
