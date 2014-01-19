@@ -4,12 +4,16 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
+    //enum obstacleTiles : int { NOTHING = 0, BARREL, HEART, CRATES, TABLE, TRAP };
+
     class Level2State : AbstractGameState
     {
         // Objects to appear
