@@ -76,7 +76,7 @@
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\PauseState.cs" />
     <Compile Include="GameObjects\LifeBar.cs" />
-    <Compile Include="LevelSelectState.cs" />
+    <Compile Include="GameStates\LevelSelectState.cs" />
     <Compile Include="MapCell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
