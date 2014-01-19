@@ -45,18 +45,18 @@ namespace MajabajaGame
 
             // Loads the image than positions buttons and set there active field
             // Load
-            m_background = m_game.Content.Load<Texture2D>("background");
+            m_background = m_game.Content.Load<Texture2D>("mainMenuBackground");
             m_playButtonImage = m_game.Content.Load<Texture2D>("buttonPlay");
             m_quitButtonImage = m_game.Content.Load<Texture2D>("buttonQuit"); // change value here
 
             // Positions
             m_backgroundPosition = new Vector2(0,0);
 
-            m_playButtonPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_playButtonImage.Width / 2,
-                m_game.GraphicsDevice.Viewport.Height / 3 - m_playButtonImage.Height / 2);
+            m_playButtonPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 4 - m_playButtonImage.Width / 2,
+                m_game.GraphicsDevice.Viewport.Height * 9 / 10 - m_playButtonImage.Height / 2);
 
-            m_quitButtontPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width / 2 - m_quitButtonImage.Width / 2,
-                m_game.GraphicsDevice.Viewport.Height * 2 / 3 - m_quitButtonImage.Height / 2);
+            m_quitButtontPosition = new Vector2(m_game.GraphicsDevice.Viewport.Width *3 / 4 - m_quitButtonImage.Width / 2,
+                m_game.GraphicsDevice.Viewport.Height * 9 / 10 - m_quitButtonImage.Height / 2);
             
             // Create Button
             m_playButton = new Button(spriteBatch, m_playButtonImage, m_playButtonPosition);

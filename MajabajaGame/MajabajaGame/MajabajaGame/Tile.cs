@@ -47,6 +47,7 @@ namespace MajabajaGame
         static public Texture2D ObstacleTileSetTexture;
         static public int TileWidth = 64;
         static public int TileHeight = 64;
+        static public bool inCollision = false;
 
         static public Vector2 originPoint = new Vector2(19, 39); //WHY??
 
@@ -60,8 +61,14 @@ namespace MajabajaGame
 
         static public bool checkCollision(Rectangle p_characterposition, int p_tileIndex)
         {
+            bool hasCollided = false;
             Rectangle tile = GetSourceRectangle(p_tileIndex);
-            return tile.Intersects(p_characterposition);
+            if (tile.Intersects(p_characterposition) && !inCollision)
+            {
+                hasCollided = true;
+                inCollision = true;
+            }
+            return hasCollided;
         }
     }
 
