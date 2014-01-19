@@ -179,7 +179,7 @@ namespace MajabajaGame
                 m_lifeBar.Draw();
                 // Character
                 m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.crouchingLoop(gameTime)), Color.White);
+                    CharacterTile.GetSourceRectangle(Character.runningLoop(gameTime)), Color.White);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
@@ -189,7 +189,7 @@ namespace MajabajaGame
         {
             this.HandleInputTouch(gameTime);
 
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 2, 0, (level1Background.MapWidth - squaresAcross) * 128);
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level1Background.MapWidth - squaresAcross) * 128);
 
             if (m_game.getCurrentKeyboardState().IsKeyDown(Keys.M))
             {

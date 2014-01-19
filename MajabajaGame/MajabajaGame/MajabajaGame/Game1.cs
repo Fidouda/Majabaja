@@ -60,7 +60,7 @@ namespace MajabajaGame
                 GestureType.Pinch;
 
             currentKeyboardState = new KeyboardState();
-            currentState = new LevelSelectState(this);
+            currentState = new MainMenuState(this);
             base.Initialize();
         }
 

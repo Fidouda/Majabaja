@@ -13,7 +13,10 @@ namespace MajabajaGame
 
         static public Rectangle GetSourceRectangle(int tileIndex)
         {
-            return new Rectangle(tileIndex % 8 * 64, tileIndex / 8 * 64, 64, 64);
+            return new Rectangle(tileIndex % 8 * 128,
+                 tileIndex / 8 * 128,
+                 128,
+                 128);
         }
     }
 }
