@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajabajaGame
 {
@@ -18,10 +19,14 @@ namespace MajabajaGame
         Vector2 m_heartPosition;
         Texture2D m_liveHeart;
         Texture2D m_deadHeart;
+
+        SoundEffectInstance soundEngineInstance;
+        SoundEffect m_life;
+        SoundEffect m_hurt;
         
 
         // Constructor
-        public LifeBar(int p_heartLimit, SpriteBatch p_spriteBatch, Texture2D p_liveHeart,Texture2D p_deadHeart) 
+        public LifeBar(int p_heartLimit, SpriteBatch p_spriteBatch, Texture2D p_liveHeart,Texture2D p_deadHeart, SoundEffect p_life, SoundEffect p_hurt) 
         {
             m_isEmpty = false;
             m_heartLimit = p_heartLimit;
@@ -34,6 +39,10 @@ namespace MajabajaGame
             m_spriteBatch = p_spriteBatch;
             m_liveHeart = p_liveHeart;
             m_deadHeart = p_deadHeart;
+
+            //Load Sounds
+            m_life = p_life;
+            m_hurt = p_hurt;
         }
 
         // Action Methods
@@ -47,10 +56,12 @@ namespace MajabajaGame
         // Adds a living heart
         public void addHeart()
         {
-            
+
             if (m_nbHearts < m_heartLimit)
             {
                 m_nbHearts++;
+                soundEngineInstance = m_life.CreateInstance();
+                soundEngineInstance.Play();
             }
         }
 
@@ -58,6 +69,8 @@ namespace MajabajaGame
         public void removeHeart()
         {
             m_nbHearts--;
+            soundEngineInstance = m_hurt.CreateInstance();
+            soundEngineInstance.Play();
             if(m_nbHearts <= 0)
             {
                 m_isEmpty = true;
