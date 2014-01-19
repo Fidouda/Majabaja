@@ -21,10 +21,6 @@ namespace MajabajaGame
         private Song m_introMusic;
         MouseState m_mouse;
 
-        //Anti bounce
-        int timeSinceLastFrame = 0;
-        static int millisecondsPerFrame = 4000;
-
 
         public IntroScreenState(Game1 p_game)
             : base(p_game)
@@ -66,17 +62,27 @@ namespace MajabajaGame
                 MediaPlayer.Play(m_introMusic);
             }
 
-            m_mouse = Mouse.GetState();
 
-            timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-            if (timeSinceLastFrame > millisecondsPerFrame)
-            {
+            TouchCollection touches = TouchPanel.GetState();
 
-                if (m_mouse.LeftButton == ButtonState.Released)
+            while(TouchPanel.IsGestureAvailable)
                 {
-                    m_game.setGameState(new Level1State(m_game));
+                // read the next gesture from the queue
+                GestureSample gesture = TouchPanel.ReadGesture();
+            
+                // we can use the type of gesture to determine our behavior
+                switch (gesture.GestureType)
+                {
+                    case GestureType.DoubleTap:
+                        {
+                            m_game.setGameState(new Level1State(m_game));
+                        }
+                        break;
+            
+                    default:
+                        break;
                 }
-            }
+            }   
 
             this.HandleInputTouch(gameTime);
 
