@@ -179,7 +179,7 @@ namespace MajabajaGame
                 m_lifeBar.Draw();
                 // Character
                 m_spriteBatch.Draw(CharacterTile.TileSetTexture, Character.getRectangle(),
-                    CharacterTile.GetSourceRectangle(Character.runningLoop(gameTime)), Color.White);
+                    CharacterTile.GetSourceRectangle(Character.characterMove(gameTime)), Color.White);
             m_spriteBatch.End();
 
             base.Draw(gameTime);
