@@ -13,9 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace MajabajaGame
 {
 
-    enum obstacleTiles : int { NOTHING =0, INVISIBLEFLOORING, FLOORING, LEFTFLOOR, RIGHTFLOOR, BARREL ,CRATE, SPIKE, HEART, TRAP = 9, WIN };
-
-    class Level1State : AbstractGameState
+    class Level4State : AbstractGameState
     {
         // Music
         private Song m_level1Music;
@@ -31,9 +29,9 @@ namespace MajabajaGame
 
         // Tiles
         SpriteBatch m_spriteBatch;
-        TileMap level1Background;
-        TileMap level1Decoration;
-        TileMap level1Obstacle;
+        TileMap level4Background;
+        TileMap level4Decoration;
+        TileMap level4Obstacle;
         int squaresAcross = 8;
         int squaresDown = 4;
         int DecoAcross = 16;
@@ -51,7 +49,7 @@ namespace MajabajaGame
         int timeFromHeart = 0;
         int HeartTime = 290;
 
-        public Level1State(Game1 p_game)
+        public Level4State(Game1 p_game)
             : base(p_game)
         {
             resetLevel();
@@ -60,7 +58,7 @@ namespace MajabajaGame
 
         public TileMap getObstacleMap()
         {
-            return level1Obstacle;
+            return level4Obstacle;
         }
 
         public void resetLevel()
@@ -85,14 +83,14 @@ namespace MajabajaGame
             CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
 
             // Load Tiles
-            using (var stream = TitleContainer.OpenStream("level1.txt"))
+            using (var stream = TitleContainer.OpenStream("level4.txt"))
             {
                 using (var reader = new StreamReader(stream))
                 {
                     int length = Convert.ToInt16(reader.ReadLine());
                     int height = Convert.ToInt16(reader.ReadLine());
 
-                    level1Background = new TileMap(length, height);
+                    level4Background = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
                     {          
@@ -101,7 +99,7 @@ namespace MajabajaGame
                             string buffer = Convert.ToString((reader.ReadLine()));
                             for (int j = 0; j < length; ++j)
                             {
-                                level1Background.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
+                                level4Background.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j])-48;
                             }
                         }
 
@@ -110,14 +108,14 @@ namespace MajabajaGame
                 }
             }
 
-            using (var stream = TitleContainer.OpenStream("level1decoration.txt"))
+            using (var stream = TitleContainer.OpenStream("level4decoration.txt"))
             {
                 using (var reader = new StreamReader(stream))
                 {
                     int length = Convert.ToInt16(reader.ReadLine());
                     int height = Convert.ToInt16(reader.ReadLine());
 
-                    level1Decoration = new TileMap(length, height);
+                    level4Decoration = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
                     {
@@ -126,7 +124,7 @@ namespace MajabajaGame
                             string buffer = Convert.ToString((reader.ReadLine()));
                             for (int j = 0; j < length; ++j)
                             {
-                                level1Decoration.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                                level4Decoration.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
                             }
                         }
 
@@ -135,14 +133,14 @@ namespace MajabajaGame
                 }
             }
 
-            using (var stream = TitleContainer.OpenStream("level1obstacle.txt"))
+            using (var stream = TitleContainer.OpenStream("level4obstacle.txt"))
             {
                 using (var reader = new StreamReader(stream))
                 {
                     int length = Convert.ToInt16(reader.ReadLine());
                     int height = Convert.ToInt16(reader.ReadLine());
 
-                    level1Obstacle = new TileMap(length, height);
+                    level4Obstacle = new TileMap(length, height);
 
                     while (!reader.EndOfStream)
                     {
@@ -151,7 +149,7 @@ namespace MajabajaGame
                             string buffer = Convert.ToString((reader.ReadLine()));
                             for (int j = 0; j < length; ++j)
                             {
-                                level1Obstacle.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
+                                level4Obstacle.Rows[i].Columns[j].TileID = Convert.ToInt16(buffer[j]);
                             }
                         }
 
@@ -160,7 +158,7 @@ namespace MajabajaGame
                 }
             }
 
-            Character.levelObstacle = level1Obstacle;
+            Character.levelObstacle = level4Obstacle;
 
             m_spriteBatch = new SpriteBatch(m_game.GraphicsDevice);
 
@@ -174,7 +172,7 @@ namespace MajabajaGame
             DecorationTile.DecorationTileSetTexture = m_game.Content.Load<Texture2D>("DecorationTiles");
             ObstacleTile.ObstacleTileSetTexture = m_game.Content.Load<Texture2D>("ObstacleTiles");
 
-            Camera.Location.Y = ((level1Background.MapHeight) * 128) - 480;
+            Camera.Location.Y = ((level4Background.MapHeight) * 128) - 480;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -196,7 +194,7 @@ namespace MajabajaGame
                         m_spriteBatch.Draw(
                             BackgroundTile.BackgroundTileSetTexture,
                             new Rectangle((x * 128) - offsetX, (y * 128) - offsetY, 128, 128),
-                            BackgroundTile.GetSourceRectangle(level1Background.Rows[y + firstY].Columns[x + firstX].TileID),
+                            BackgroundTile.GetSourceRectangle(level4Background.Rows[y + firstY].Columns[x + firstX].TileID),
                             Color.White);
                     }
                 }
@@ -220,13 +218,13 @@ namespace MajabajaGame
                     for (int x = 0; x < DecoAcross; x++)
                     {
 
-                        if (level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
+                        if (level4Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID >= 48 && level4Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID < 58)
                         {
-                            tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
+                            tempValue = level4Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 48;
                         }
                         else
                         {
-                            tempValue = level1Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
+                            tempValue = level4Decoration.Rows[y + firstY1].Columns[x + firstX1].TileID - 55;
                         }
                         
 
@@ -261,13 +259,13 @@ namespace MajabajaGame
                     for (int x = 0; x < ObstAcross; x++)
                     {
 
-                        if (level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID >= 48 && level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID < 58)
+                        if (level4Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID >= 48 && level4Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID < 58)
                         {
-                            tempValue1 = level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 48;
+                            tempValue1 = level4Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 48;
                         }
                         else
                         {
-                            tempValue1 = level1Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 55;
+                            tempValue1 = level4Obstacle.Rows[y + firstY2].Columns[x + firstX2].TileID - 55;
                         }
 
                         tilePos = new Rectangle((x * 64) - offsetX2, (y * 64) - offsetY2, 64, 64);
@@ -309,7 +307,7 @@ namespace MajabajaGame
             this.HandleInputTouch(gameTime);
 
             Character.camera = Camera.Location;
-            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level1Background.MapWidth - squaresAcross) * 128);
+            Camera.Location.X = MathHelper.Clamp(Camera.Location.X + 6, 0, (level4Background.MapWidth - squaresAcross) * 128);
 
             // Loops song
             if(MediaPlayer.State == MediaState.Stopped)
@@ -366,7 +364,7 @@ namespace MajabajaGame
                     break;
 
                 case (int)obstacleTiles.WIN:
-                    m_game.setGameState(new Level2State(m_game));
+                    m_game.setGameState(new Level5State(m_game));
                     break;
 
                 default:

@@ -101,7 +101,7 @@ namespace MajabajaGame
 
                                 if (m_rageQuitButton.getField().Contains(new Point((int)gesture.Position.X, (int)gesture.Position.Y)))
                                 {
-                                    m_game.Exit();
+                                    m_game.setGameState(new MainMenuState(m_game));
                                 }
                             }
                             break;

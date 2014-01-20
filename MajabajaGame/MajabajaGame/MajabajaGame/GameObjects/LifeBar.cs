@@ -30,7 +30,7 @@ namespace MajabajaGame
         {
             m_isEmpty = false;
             m_heartLimit = p_heartLimit;
-            m_nbHearts = p_heartLimit -1;
+            m_nbHearts = p_heartLimit;
 
             // Hard Coded Lifebar location
             m_heartPosition = new Vector2(0, 20);

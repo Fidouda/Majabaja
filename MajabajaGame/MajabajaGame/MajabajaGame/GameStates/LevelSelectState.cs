@@ -144,25 +144,25 @@ namespace MajabajaGame
 
                     if (m_level3Button.getField().Contains(new Point(m_mouse.X, m_mouse.Y)))
                     {
-                        m_game.setGameState(new Level1State(m_game));
+                        m_game.setGameState(new Level3State(m_game));
                         MediaPlayer.Stop();
                     }
 
                     if (m_level4Button.getField().Contains(new Point(m_mouse.X, m_mouse.Y)))
                     {
-                        m_game.setGameState(new Level1State(m_game));
+                        m_game.setGameState(new Level4State(m_game));
                         MediaPlayer.Stop();
                     }
 
                     if (m_level5Button.getField().Contains(new Point(m_mouse.X, m_mouse.Y)))
                     {
-                        m_game.setGameState(new Level1State(m_game));
+                        m_game.setGameState(new Level5State(m_game));
                         MediaPlayer.Stop();
                     }
 
                     if (m_level6Button.getField().Contains(new Point(m_mouse.X, m_mouse.Y)))
                     {
-                        m_game.setGameState(new Level1State(m_game));
+                        m_game.setGameState(new Level6State(m_game));
                         MediaPlayer.Stop();
                     }
                 }
