@@ -52,12 +52,20 @@ namespace MajabajaGame
         public Level2State(Game1 p_game)
             : base(p_game)
         {
+            resetLevel();
             LoadContent();
         }
 
         public TileMap getObstacleMap()
         {
             return level2Obstacle;
+        }
+
+        public void resetLevel()
+        {
+            Camera.Location.Y = (16 * 128) - 480;
+            Camera.Location.X = 0;
+            Character.resetCharacter();
         }
 
         public override void LoadContent()
@@ -68,6 +76,8 @@ namespace MajabajaGame
 
             //Load Sounds
             magic = m_game.Content.Load<SoundEffect>("spell2");
+            m_life = m_game.Content.Load<SoundEffect>("Life");
+            m_hurt = m_game.Content.Load<SoundEffect>("Hit_Hurt");
 
             // Load Player
             CharacterTile.TileSetTexture = m_game.Content.Load<Texture2D>("character");
@@ -348,6 +358,10 @@ namespace MajabajaGame
                 case (int)obstacleTiles.SPIKE:
                 case (int)obstacleTiles.TRAP:
                     m_game.setGameState(new DeathState(m_game));
+                    break;
+
+                case (int)obstacleTiles.WIN:
+                    m_game.setGameState(new Level2State(m_game));
                     break;
 
                 default:

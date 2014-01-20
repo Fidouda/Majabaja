@@ -74,6 +74,10 @@
     <Compile Include="GameStates\IntroScreenState.cs" />
     <Compile Include="GameStates\Level1State.cs" />
     <Compile Include="GameStates\Level2State.cs" />
+    <Compile Include="GameStates\Level3State.cs" />
+    <Compile Include="GameStates\Level4State.cs" />
+    <Compile Include="GameStates\Level5State.cs" />
+    <Compile Include="GameStates\Level6State.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\PauseState.cs" />
     <Compile Include="GameObjects\LifeBar.cs" />
@@ -142,6 +146,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="level6decoration.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="level6obstacle.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="levelTest.txt">
